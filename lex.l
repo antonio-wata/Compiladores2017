@@ -17,8 +17,14 @@ int	[0-9]+
 double [0-9]+("."[0-9]+)?
 float [0-9]+("."[0-9]+)?[fF]
 char '[a-zA-z]'
+comment [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
+uncomment [/][*]
 
 %%
+
+{uncomment}             { printf("Error comentario mal declarado: %s\n", yytext); }
+
+{comment}               { printf("Lei un comentario: %s\n", yytext); }
 
 {int}			{ printf("Lei un entero: %s\n", yytext); }
 
