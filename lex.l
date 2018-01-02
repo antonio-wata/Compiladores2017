@@ -16,15 +16,16 @@ id [a-zA-Z][a-zA-Z0-9_]*
 int	[0-9]+
 double [0-9]+("."[0-9]+)?
 float [0-9]+("."[0-9]+)?[fF]
-char '[a-zA-z]'
+char '[a-zA-z0-9]'
+cadena \"[a-zA-Z0-9]*\"
 comment [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 uncomment [/][*]
 
 %%
 
-{uncomment}             { printf("Error comentario mal declarado: %s\n", yytext); }
+{uncomment}		{ printf("Error comentario mal declarado: %s\n", yytext); }
 
-{comment}               { printf("Lei un comentario: %s\n", yytext); }
+{comment}		{ printf("Lei un comentario: %s\n", yytext); }
 
 {int}			{ printf("Lei un entero: %s\n", yytext); }
 
@@ -33,6 +34,8 @@ uncomment [/][*]
 {float}			{ printf("Lei un flotante: %s\n", yytext); }
 
 {char}			{ printf("Lei un char: %s\n", yytext); }
+
+{cadena}		{ printf("Lei una cadena: %s\n", yytext); }
 
 int				{ printf("Tipo: %s\n", yytext); }
 
