@@ -3,9 +3,7 @@
 	#include <stdio.h>
 	#include <string.h>
 	#include <stdlib.h>
-
-	// Variable que llevara el conteo de las lineas.
-	int linea = 1;
+	#include "yacc.tab.h"
 
 %}
 
@@ -25,119 +23,111 @@ uncomment [/][*]
 
 {uncomment}		{ printf("Error comentario mal declarado: %s\n", yytext); }
 
-{comment}		{ printf("Lei un comentario: %s\n", yytext); }
+{comment}		{}
 
-{int}			{ printf("Lei un entero: %s\n", yytext); }
+{int}			{ yylval.line = yylineno; return NUMERO; }
 
-{double}		{ printf("Lei un doble: %s\n", yytext); }
+{double}		{ yylval.line = yylineno; return NUMERO; }
 
-{float}			{ printf("Lei un flotante: %s\n", yytext); }
+{float}			{ yylval.line = yylineno; return NUMERO; }
 
-{char}			{ printf("Lei un char: %s\n", yytext); }
+{char}			{ yylval.line = yylineno; return CARACTER; }
 
-{cadena}		{ printf("Lei una cadena: %s\n", yytext); }
+{cadena}		{ yylval.line = yylineno; return CADENA; }
 
-int				{ printf("Tipo: %s\n", yytext); }
+int				{ yylval.line = yylineno; return INT; }
 
-double			{ printf("Tipo: %s\n", yytext); }
+double			{ yylval.line = yylineno; return DOUBLE; }
 
-float			{ printf("Tipo: %s\n", yytext); }
+float			{ yylval.line = yylineno; return FLOAT; }
 
-char			{ printf("Tipo: %s\n", yytext); }
+char			{ yylval.line = yylineno; return CHAR; }
 
-void			{ printf("Tipo: %s\n", yytext); }
+void			{ yylval.line = yylineno; return VOID; }
 
-struct			{ printf("Tipo: %s\n", yytext); }
+struct			{ yylval.line = yylineno; return STRUCT; }
 
-func			{ printf("Empieza una funcion\n"); }
+func			{ yylval.line = yylineno; return FUNCION; }
 
-if 				{ printf("Empieza un if\n"); }
+if 				{ yylval.line = yylineno; return IF; }
 
-else 			{ printf("Empieza un else\n"); }
+else 			{ yylval.line = yylineno; return ELSE; }
 
-while			{ printf("Empieza un while\n"); }
+while			{ yylval.line = yylineno; return WHILE; }
 
-do 				{ printf("Empieza un do-while\n"); }
+do 				{ yylval.line = yylineno; return DO; }
 
-for				{ printf("Empieza un for\n"); }
+for				{ yylval.line = yylineno; return FOR; }
 
-return			{ printf("Regresamos algo\n"); }
+return			{ yylval.line = yylineno; return RETURN; }
 
-switch			{ printf("Empieza un switch\n"); }
+switch			{ yylval.line = yylineno; return SWITCH; }
 
-case			{ printf("Empieza un case\n"); }
+case			{ yylval.line = yylineno; return CASE; }
 
-default			{ printf("Empieza un default\n"); }
+default			{ yylval.line = yylineno; return DEFAULT; }
 
-break			{ printf("Termina un case\n"); }
+break			{ yylval.line = yylineno; return BREAK; }
 
-print 			{ printf("Funcion print\n"); }
+print 			{ yylval.line = yylineno; return PRINT; }
 
-true 			{ printf("TRUE\n"); }
+true 			{ yylval.line = yylineno; return TRUE; }
 
-false			{ printf("FALSE\n"); }
+false			{ yylval.line = yylineno; return FALSE; }
 
-{id}			{ printf("Nuevo identificador: %s\n", yytext); }
+{id}			{ yylval.line = yylineno; return ID; }
 
-"+"				{ printf("Operador: %s\n", yytext); }
+"+"				{ yylval.line = yylineno; return MAS; }
 
-"-"				{ printf("Operador: %s\n", yytext); }
+"-"				{ yylval.line = yylineno; return MENOS; }
 
-"*"				{ printf("Operador: %s\n", yytext); }
+"*"				{ yylval.line = yylineno; return PROD; }
 
-"/"				{ printf("Operador: %s\n", yytext); }
+"/"				{ yylval.line = yylineno; return DIV; }
 
-"%"				{ printf("Operador: %s\n", yytext); }
+"%"				{ yylval.line = yylineno; return PORC; }
 
-"(" 			{ printf("%s\n", yytext); }
+"(" 			{ yylval.line = yylineno; return PRA; }
 
-")" 			{ printf("%s\n", yytext); }
+")" 			{ yylval.line = yylineno; return PRC; }
 
-"["				{ printf("%s\n", yytext); }
+"["				{ yylval.line = yylineno; return CTA; }
 
-"]"				{ printf("%s\n", yytext); }
+"]"				{ yylval.line = yylineno; return CTC; }
 
-"{"				{ printf("%s\n", yytext); }	
+"{"				{ yylval.line = yylineno; return LLA; }	
 
-"}"				{ printf("%s\n", yytext); }	
+"}"				{ yylval.line = yylineno; return LLC; }	
 
-"="				{ printf("%s\n", yytext); }	
+"="				{ yylval.line = yylineno; return EQ; }	
 
-":"				{ printf("%s\n", yytext); }	
+":"				{ yylval.line = yylineno; return DPTS; }	
 
-";"				{ printf("%s\n", yytext); }	
+";"				{ yylval.line = yylineno; return PYC; }	
 
-","				{ printf("%s\n", yytext); }
+","				{ yylval.line = yylineno; return COMA; }
 
-"!"				{ printf("%s\n", yytext); }	
+"!"				{ yylval.line = yylineno; return NOT; }	
 
-"||"			{ printf("%s\n", yytext); }	
+"||"			{ yylval.line = yylineno; return OR; }	
 
-"&&"			{ printf("%s\n", yytext); }	
+"&&"			{ yylval.line = yylineno; return AND; }	
 
-"<"				{ printf("%s\n", yytext); }
+"<"				{ yylval.line = yylineno; return SMT; }
 
-">"				{ printf("%s\n", yytext); }
+">"				{ yylval.line = yylineno; return GRT; }
 
-">="			{ printf("%s\n", yytext); }
+">="			{ yylval.line = yylineno; return GREQ; }
 
-"<="			{ printf("%s\n", yytext); }
+"<="			{ yylval.line = yylineno; return SMEQ; }
 
-"!="			{ printf("%s\n", yytext); }
+"!="			{ yylval.line = yylineno; return DIF; }
 
-"=="			{ printf("%s\n", yytext); }
+"=="			{ yylval.line = yylineno; return EQEQ; }
 
-[ \t\r]			{}
+[ \n\t\r]		{}
 
-[\n]			{ linea++; }
-
-.				{ printf("Error lexico en la linea: %i\n", linea);}
+.				{ printf("Error lexico en la linea: %d\n", yylineno);}
 
 %%
 
-// Esto se tiene que quitar, el main va en el archivo yacc.
-int main(int argc, char* argv[]){
-	yyin = fopen(argv[1], "r");
-	yylex();
-	fclose(yyin);
-}

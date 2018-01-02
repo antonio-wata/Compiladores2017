@@ -1,0 +1,16 @@
+int x;
+int y;
+float a;
+double b;
+char z;
+
+func int main(){
+	return;
+}
+
+func double main2(int q, char p){
+	double x;
+	return x;
+}
+
+/*func int main2(){}*/

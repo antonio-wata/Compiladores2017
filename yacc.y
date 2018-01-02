@@ -4,7 +4,20 @@
 	#include <string.h>
 	#include <stdlib.h>
 
+	extern int yylex();
+	extern int yyparse();
+	extern char *yytext;
+	extern FILE *yyin;
+	extern FILE *yyout;
+	extern int yylineno;
+
+	void yyerror(char*);
+
 %}
+
+%union{
+	int line;
+}
 
 %start P
 
@@ -81,8 +94,8 @@
 P: 	D F
 	;
 
-/* D -> T L | epsilon*/
-D: 	T L
+/* D -> T L ; D | epsilon*/
+D: 	T L PYC D
 	|
 	;
 
@@ -191,12 +204,24 @@ B: 	B OR B
 	;
 
 /* R -> < | > | >= | <= | != | == */
-R:	GRT
-	| SMT
-	| SMEQ
+R:	SMT
+	| GRT
 	| GREQ
+	| SMEQ
 	| DIF
 	| EQEQ
 	;
 
 %%
+
+void yyerror(char *s){
+	(void) s;
+	fprintf(stderr, "Error Sintactico en la linea %d: '%s'\n", yylineno, yytext);
+}
+
+int main(int argc, char *argv[]){
+	yyin = fopen(argv[1], "r");
+	yyparse();
+	fclose(yyin);
+	return 0;
+}
