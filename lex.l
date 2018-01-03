@@ -85,7 +85,7 @@ false			{ yylval.line = yylineno; return FALSE; }
 
 "/"				{ yylval.line = yylineno; return DIV; }
 
-"%"				{ yylval.line = yylineno; return PORC; }
+"%"				{ yylval.line = yylineno; return MOD; }
 
 "(" 			{ yylval.line = yylineno; return PRA; }
 
@@ -99,7 +99,7 @@ false			{ yylval.line = yylineno; return FALSE; }
 
 "}"				{ yylval.line = yylineno; return LLC; }	
 
-"="				{ yylval.line = yylineno; return EQ; }	
+"="				{ yylval.line = yylineno; return ASIG; }	
 
 ":"				{ yylval.line = yylineno; return DPTS; }	
 

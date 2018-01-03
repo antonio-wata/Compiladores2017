@@ -41,7 +41,7 @@
 
 %token PYC
 
-%token EQ
+%token ASIG
 
 %token DPTS
 
@@ -72,7 +72,7 @@
 %token MENOS
 %token PROD
 %token DIV
-%token PORC
+%token MOD
 
 %token TRUE
 %token FALSE
@@ -87,6 +87,19 @@
 %token SMEQ
 %token DIF
 %token EQEQ
+
+/* Presedencia y asociatividad de operadores */
+%left ASIG
+%left OR
+%left AND
+%left EQEQ DIF
+%left GRT SMT GREQ SMEQ
+%left MAS MENOS
+%left PROD DIV MOD
+%left NOT
+%nonassoc PRA CTA PRC CTC
+%left IF
+%left ELSE
 
 %%
 
@@ -145,7 +158,7 @@ S: 	S S
 	| WHILE PRA B PRC S
 	| DO S WHILE PRA B PRC PYC
 	| FOR PRA S PYC B PYC S PRC S
-	| U EQ E PYC
+	| U ASIG E PYC
 	| RETURN E PYC
 	| RETURN PYC
 	| LLA S LLC
@@ -180,7 +193,7 @@ E:	E MAS E
 	| E MENOS E
 	| E PROD E
 	| E DIV E
-	| E PORC E
+	| E MOD E
 	| U
 	| CADENA
 	| NUMERO
