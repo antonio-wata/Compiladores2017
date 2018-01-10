@@ -42,42 +42,24 @@
 
 %start P
 
+%token<sval> ID
+%token<nval> ENTERO
+%token<dval> DOBLE
+%token<fval> FLOTANTE
 %token INT
 %token FLOAT
 %token DOUBLE
 %token CHAR
 %token VOID
 %token STRUCT
-
 %token LLA
 %token LLC
-
 %token COMA
-
-%token CTA
-%token CTC
-
-%token PRA
-%token PRC
-
 %token PYC
-
-%token ASIG
-
 %token DPTS
-
 %token PT
-
-%token ID
-
-%token ENTERO
-%token DOBLE
-%token FLOTANTE
-
 %token FUNCION
-
 %token IF
-%token ELSE
 %token WHILE
 %token DO
 %token FOR
@@ -87,38 +69,19 @@
 %token PRINT
 %token CASE
 %token DEFAULT
-
 %token CADENA
 %token CARACTER
-
-%token MAS
-%token MENOS
-%token PROD
-%token DIV
-%token MOD
-
 %token TRUE
 %token FALSE
-
-%token OR
-%token AND
-%token NOT
-
-%token GRT
-%token SMT
-%token GREQ
-%token SMEQ
-%token DIF
-%token EQEQ
 
 /* Presedencia y asociatividad de operadores */
 %left ASIG
 %left OR
 %left AND
-%left EQEQ DIF
-%left GRT SMT GREQ SMEQ
-%left MAS MENOS
-%left PROD DIV MOD
+%left<ssval> EQEQ DIF
+%left<ssval> GRT SMT GREQ SMEQ
+%left<ssval> MAS MENOS
+%left<ssval> PROD DIV MOD
 %left NOT
 %nonassoc PRA CTA PRC CTC
 %left IF
