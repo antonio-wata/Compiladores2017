@@ -13,12 +13,31 @@
 	extern FILE *yyout;
 	extern int yylineno;
 
+	int dir;
+	int temporales;
+	int siginst;
+
+	void init();
+	int existe(char *id);
+	expresion operacion(expresion e1, expresion e2, char *op);
+	expresion numero(int n);
+	expresion identificador(char *s);
+	condition relacional(expresion e1, expresion e2, char *oprel);
+	condition and(condition c1, condition c2);
+	condition or(condition c1, condition c2);
+	void newLabel(char *s);
+
 	void yyerror(char*);
 
 %}
 
 %union{
 	int line;
+	int nval;
+	double dval;
+	float fval;
+	char sval[32];
+	char ssval[3];
 }
 
 %start P
@@ -51,7 +70,9 @@
 
 %token ID
 
-%token NUMERO
+%token ENTERO
+%token DOBLE
+%token FLOTANTE
 
 %token FUNCION
 
@@ -129,7 +150,7 @@ L: 	L COMA ID C
 	;
 
 /* C -> [numero] C | epsilon */
-C:	CTA NUMERO CTC C
+C:	CTA ENTERO CTC C
 	|
 	;
 
@@ -170,7 +191,7 @@ S: 	S S
 	;
 
 /* J -> case : numero S J | epsilon */
-J:	CASE DPTS NUMERO S J
+J:	CASE DPTS ENTERO S J
 	|
 	;
 
@@ -198,7 +219,9 @@ E:	E MAS E
 	| E MOD E
 	| U
 	| CADENA
-	| NUMERO
+	| ENTERO
+	| DOBLE
+	| FLOTANTE
 	| CARACTER
 	| ID PRA H PRC
 	;
