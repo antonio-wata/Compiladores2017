@@ -14,8 +14,8 @@ id [a-zA-Z][a-zA-Z0-9_]*
 int	[0-9]+
 double [0-9]+("."[0-9]+)?
 float [0-9]+("."[0-9]+)?[fF]
-char '[a-zA-z0-9]'
-cadena \"[a-zA-Z0-9]*\"
+char '[^\']'
+cadena \"[^\"]*\"
 comment [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 uncomment [/][*]
 

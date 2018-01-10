@@ -5,6 +5,8 @@ double b;
 char z;
 
 func int main(){
+	z = '<;
+	/* z = '>'; */
 	return;
 }
 

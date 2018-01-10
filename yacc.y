@@ -3,6 +3,8 @@
 	#include <stdio.h>
 	#include <string.h>
 	#include <stdlib.h>
+	#include "attribs.h"
+	#include "intermediate_code.h"
 
 	extern int yylex();
 	extern int yyparse();
