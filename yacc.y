@@ -17,6 +17,8 @@
 	int dir;
 	int temporales;
 	int siginst;
+	char* global_tipo;
+	int global_dim;
 
 	void init();
 	int existe(char *id);
@@ -39,6 +41,7 @@
 	float fval;
 	char sval[32];
 	char ssval[3];
+	type tval;
 }
 
 %start P
@@ -88,24 +91,28 @@
 %left IF
 %left ELSE
 
+/* Tipos */
+%type<tval> T
+
 %%
 
 /* P -> D F */
-P: 	D F
+P: 	{ init(); } D F { print_table(); print_code();}
 	;
 
+
 /* D -> T L ; D | epsilon*/
-D: 	T L PYC D
+D: 	T { global_tipo = $1.type; global_dim = $1.dim; } L PYC D
 	|
 	;
 
 /* T -> int | float | double | char | void | struct { D } */
-T: 	INT
-	| FLOAT
-	| DOUBLE
-	| CHAR
-	| VOID
-	| STRUCT LLA D LLC
+T: 	INT { $$.type = "int"; $$.dim = 2; }
+	| FLOAT { $$.type = "float"; $$.dim = 4; }
+	| DOUBLE { $$.type = "double"; $$.dim = 8; }
+	| CHAR { $$.type = "char"; $$.dim = 1; }
+	| VOID { $$.type = "void"; $$.dim = 0; }
+	| STRUCT LLA D LLC { $$.type = "struct"; $$.dim = -1; }
 	;
 
 /* L -> L, id C | id C */
@@ -215,6 +222,12 @@ R:	SMT
 	;
 
 %%
+
+void init(){
+	dir = 0;
+	temporales = 0;
+	init_table();
+}
 
 void yyerror(char *s){
 	(void) s;

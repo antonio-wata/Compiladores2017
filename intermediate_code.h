@@ -4,22 +4,19 @@
 #include <string.h>
 
 
-typedef struct _quad
-{
+typedef struct _quad{
 	char op[20];
 	char arg1[50];
 	char arg2[20];
 	char res[20];
 } quad;
 
-typedef struct _intermediate_code
-{
+typedef struct _intermediate_code{
 	quad items[10000];
 	int i;
 } intermediate_code;
 
-typedef struct _label
-{
+typedef struct _label{
 	int items[100];
 	int i;
 } label;
@@ -38,4 +35,5 @@ label merge(label l1, label l2);
 void backpatch(label l, int inst);
 
 void print_code();
+
 #endif

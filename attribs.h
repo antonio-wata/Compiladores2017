@@ -9,21 +9,17 @@ typedef struct _expresion{
     int first;
 } expresion;
 
-
-
 typedef struct _condition{
     label ltrue;
     label lfalse;  
     int first;  
 } condition;
 
-
 typedef struct _num{
     int type;
     int ival;
     double dval;
 } num;
-
 
 typedef struct _sentence{
     label lnext;
