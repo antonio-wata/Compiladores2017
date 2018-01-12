@@ -22,6 +22,7 @@
 
 	void init();
 	int existe(char *id);
+	int existe_en_alcance(char*id);
 	expresion operacion(expresion e1, expresion e2, char *op);
 	expresion numero(int n);
 	expresion identificador(char *s);
@@ -42,6 +43,7 @@
 	char sval[32];
 	char ssval[3];
 	type tval;
+	array tarrval;
 }
 
 %start P
@@ -93,6 +95,7 @@
 
 /* Tipos */
 %type<tval> T
+%type<tarrval> C
 
 %%
 
@@ -116,12 +119,32 @@ T: 	INT { $$.type = "int"; $$.dim = 2; }
 	;
 
 /* L -> L, id C | id C */
-L: 	L COMA ID C
-	| ID C
+L: 	L COMA ID C { 
+		if(existe_en_alcance($3) == -1){
+			symbol sym;
+			strcpy(sym.id, $3);
+			sym.dir = dir;
+			sym.type = $4.type;
+			sym.var = "variable";
+			insert_symbol(sym);
+			dir += $4.dim;
+		} else yyerror("Identificadores duplicados en el mismo alcance");
+	}
+	| ID C {
+		if(existe_en_alcance($1) == -1){
+			symbol sym;
+			strcpy(sym.id, $1);
+			sym.dir = dir;
+			sym.type = $2.type;
+			sym.var = "variable";
+			insert_symbol(sym);
+			dir += $2.dim;
+		} else yyerror("Identificadores duplicados en el mismo alcance");
+	}
 	;
 
 /* C -> [numero] C | epsilon */
-C:	CTA ENTERO CTC C
+C:	CTA ENTERO CTC C 
 	|
 	;
 
@@ -229,9 +252,13 @@ void init(){
 	init_table();
 }
 
+int existe_en_alcance(char* id){
+	return search_scope(id);
+}
+
 void yyerror(char *s){
 	(void) s;
-	fprintf(stderr, "Error Sintactico en la linea %d: '%s'\n", yylineno, yytext);
+	fprintf(stderr, "Error Sintactico: %s. En la linea: %d\n", s, yylineno);
 }
 
 int main(int argc, char *argv[]){
