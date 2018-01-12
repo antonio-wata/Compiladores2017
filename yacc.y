@@ -17,7 +17,7 @@
 	int dir;
 	int temporales;
 	int siginst;
-	char* global_tipo;
+	int global_tipo;
 	int global_dim;
 
 	void init();
@@ -110,17 +110,18 @@ D: 	T { global_tipo = $1.type; global_dim = $1.dim; } L PYC D
 	;
 
 /* T -> int | float | double | char | void | struct { D } */
-T: 	INT { $$.type = "int"; $$.dim = 2; }
-	| FLOAT { $$.type = "float"; $$.dim = 4; }
-	| DOUBLE { $$.type = "double"; $$.dim = 8; }
-	| CHAR { $$.type = "char"; $$.dim = 1; }
-	| VOID { $$.type = "void"; $$.dim = 0; }
-	| STRUCT LLA D LLC { $$.type = "struct"; $$.dim = -1; }
+T: 	INT { $$.type = 1; $$.dim = 2; }
+	| FLOAT { $$.type = 2; $$.dim = 4; }
+	| DOUBLE { $$.type = 3; $$.dim = 8; }
+	| CHAR { $$.type = 4; $$.dim = 1; }
+	| VOID { $$.type = 0; $$.dim = 0; }
+	| STRUCT LLA D LLC { $$.type = 5; $$.dim = -1; }
 	;
 
 /* L -> L, id C | id C */
 L: 	L COMA ID C { 
 		if(existe_en_alcance($3) == -1){
+			printf("nuevo simbolo.\n");
 			symbol sym;
 			strcpy(sym.id, $3);
 			sym.dir = dir;
@@ -253,6 +254,8 @@ void init(){
 }
 
 int existe_en_alcance(char* id){
+	printf("Buscando %s...\n", id);
+	printf("%d\n", search_scope(id));
 	return search_scope(id);
 }
 

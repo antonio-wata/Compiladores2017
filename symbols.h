@@ -4,11 +4,10 @@
 /* Estructura de una lista de parametros. */
 // type - La cabeza de la lista.
 // next_arg - La cola de la lista.
-typedef struct _list_args list_args;
-struct _list_args{
-	char* type;
-	list_args* next_arg;
-};
+//typedef struct _list_args list_args;
+//struct _list_args{
+//	int types[100];
+//};
 
 /* Estructura de un simbolo */
 // id - Identificador
@@ -19,10 +18,11 @@ struct _list_args{
 typedef struct _symbol{
     char* id;
     char* var;
-    char* type;
+    int type;
     int dir;
     int num_args;
-    list_args type_args;
+    //list_args type_args;
+    int list_types[100];
 } symbol;
 
 /* Estructura de la tabla de simbolos. */
@@ -52,7 +52,7 @@ symbols_stack SYM_STACK;
 
 void init_table();
 
-char* get_List_Types(list_args* args);
+//char* get_List_Types(list_args* args);
 
 int search_scope(char *id);
 
@@ -60,7 +60,7 @@ int search_global(char *id);
 
 void insert_symbol(symbol sym);
 
-char* get_type(char *id);
+int get_type(char *id);
 
 int get_dir(char *id);
 

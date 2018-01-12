@@ -6,14 +6,16 @@
 /* Inicializa la tabla de simbolos. */
 void init_table(){
     SYM_TABLE.symbols = malloc(sizeof(symbol) * 1000);
-    SYM_STACK.tables = malloc(sizeof(symbols_table) * 1000);
     SYM_TABLE.total = -1;
+    SYM_STACK.tables = malloc(sizeof(symbols_table) * 1000);
     *(SYM_STACK.tables) = SYM_TABLE;
     SYM_STACK.total = 0;
+    printf("Tablas iniciadas.\n");
 }
 
 /* Funcion que obtiene los tipos de la lista pasada como parametros */
 // Funcion auxiliar de print_table().
+/*
 char* get_list_types(list_args* args){
     char* str_list;
     while(args != NULL){
@@ -37,13 +39,14 @@ int search_scope(char *id){
 
 /* Funcion que busca el identificador en todas las tablas. */
 int search_global(char *id){
-    int i = 0;
-    symbols_stack* nivel_actual = &SYM_STACK;
-    while(nivel_actual != NULL){
-        for(int i = 0; i < nivel_actual->tables->total; i++)
-            if(strcmp(id, (nivel_actual->tables->symbols + i)->id) == 0)
+    int j = SYM_STACK.total;
+    symbols_table* tabla_actual = SYM_STACK.tables + SYM_STACK.total;
+    while(j >= 0){
+        for(int i = 0; i <= tabla_actual->total; i++)
+            if(strcmp(id, (tabla_actual->symbols + i)->id) == 0)
                 return i;
-        nivel_actual =  nivel_actual + (++i);
+        j--;
+        tabla_actual = SYM_STACK.tables + j;
     }
     return -1;
 }
@@ -51,7 +54,8 @@ int search_global(char *id){
 /* Funcion que agrega un simbolo a la tabla de simbolos actual. */
 void insert_symbol(symbol sym){
     symbols_table* scope = SYM_STACK.tables + SYM_STACK.total;
-    scope->total += 1;
+    (scope->total)++;
+    printf("Agregando...\n");
     *(scope->symbols + scope->total) = sym;
 }
 
@@ -113,7 +117,7 @@ int set_var(char *id, int var){
 void print_table(){
     symbols_table* top = SYM_STACK.tables + SYM_STACK.total;
     printf("*** TABLA DE SIMBOLOS ***\n");
-    printf("pos\tid\ttipo\tdir\tvar\t#args\ttipo_args\n");
+    printf("pos\tid\ttipo\tdir\tvar\t\t#args\ttipo_args\n");
     for(int i = 0; i < top->total; i++)
-        printf("%d\t%s\t%s\t%d\t%s\t%d\t%s\n", i, (top->symbols + i)->id, (top->symbols + i)->type, (top->symbols + i)->dir, (top->symbols + i)->var, (top->symbols + i)->num_args, get_list_types(&(top->symbols + i)->type_args));
+        printf("%d\t%s\t%d\t%d\t%s\t%d\t%s\n", i, (top->symbols + i)->id, (top->symbols + i)->type, (top->symbols + i)->dir, (top->symbols + i)->var, (top->symbols + i)->num_args);
 }

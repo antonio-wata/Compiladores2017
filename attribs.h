@@ -27,13 +27,13 @@ typedef struct _sentence{
 } sentence;
 
 typedef struct _type{
-    char* type;
+    int type;
     int dim;
 } type;
 
 typedef struct array{
-    char* type;
-    char* base;
+    int type;
+    int base;
     int dim;
 } array;
 
