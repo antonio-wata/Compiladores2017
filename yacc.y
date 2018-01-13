@@ -121,9 +121,8 @@ T: 	INT { $$.type = 1; $$.dim = 2; }
 /* L -> L, id C | id C */
 L: 	L COMA ID C { 
 		if(existe_en_alcance($3) == -1){
-			printf("nuevo simbolo.\n");
 			symbol sym;
-			strcpy(sym.id, $3);
+			sym.id = $3;
 			sym.dir = dir;
 			sym.type = $4.type;
 			sym.var = "variable";
@@ -134,7 +133,7 @@ L: 	L COMA ID C {
 	| ID C {
 		if(existe_en_alcance($1) == -1){
 			symbol sym;
-			strcpy(sym.id, $1);
+			sym.id = $1;
 			sym.dir = dir;
 			sym.type = $2.type;
 			sym.var = "variable";
@@ -254,8 +253,6 @@ void init(){
 }
 
 int existe_en_alcance(char* id){
-	printf("Buscando %s...\n", id);
-	printf("%d\n", search_scope(id));
 	return search_scope(id);
 }
 

@@ -10,7 +10,6 @@ void init_table(){
     SYM_STACK.tables = malloc(sizeof(symbols_table) * 1000);
     *(SYM_STACK.tables) = SYM_TABLE;
     SYM_STACK.total = 0;
-    printf("Tablas iniciadas.\n");
 }
 
 /* Funcion que obtiene los tipos de la lista pasada como parametros */
@@ -30,6 +29,7 @@ char* get_list_types(list_args* args){
 
 /* Funcion que busca el identificador en el mismo alcance. */
 int search_scope(char *id){
+    printf("Buscando %s...\n", id);
     symbols_table* top = SYM_STACK.tables + SYM_STACK.total;
     for(int i = 0; i <= top->total; i++)
         if(strcmp(id, (top->symbols + i)->id) == 0)
@@ -53,9 +53,9 @@ int search_global(char *id){
 
 /* Funcion que agrega un simbolo a la tabla de simbolos actual. */
 void insert_symbol(symbol sym){
+    printf("Agregando %s a la tabla...\n", sym.id);
     symbols_table* scope = SYM_STACK.tables + SYM_STACK.total;
     (scope->total)++;
-    printf("Agregando...\n");
     *(scope->symbols + scope->total) = sym;
 }
 
