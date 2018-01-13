@@ -40,8 +40,8 @@
 	int nval;
 	double dval;
 	float fval;
-	char sval[32];
-	char ssval[3];
+	char sval[40];
+	char opval[4];
 	type tval;
 	array tarrval;
 }
@@ -84,10 +84,10 @@
 %left ASIG
 %left OR
 %left AND
-%left<ssval> EQEQ DIF
-%left<ssval> GRT SMT GREQ SMEQ
-%left<ssval> MAS MENOS
-%left<ssval> PROD DIV MOD
+%left<opval> EQEQ DIF
+%left<opval> GRT SMT GREQ SMEQ
+%left<opval> MAS MENOS
+%left<opval> PROD DIV MOD
 %left NOT
 %nonassoc PRA CTA PRC CTC
 %left IF
@@ -96,6 +96,7 @@
 /* Tipos */
 %type<tval> T
 %type<tarrval> C
+%type<opval> R
 
 %%
 
@@ -236,12 +237,12 @@ B: 	B OR B
 	;
 
 /* R -> < | > | >= | <= | != | == */
-R:	SMT
-	| GRT
-	| GREQ
-	| SMEQ
-	| DIF
-	| EQEQ
+R:	SMT { strcpy($$, $1); }
+	| GRT { strcpy($$, $1); }
+	| GREQ { strcpy($$, $1); }
+	| SMEQ { strcpy($$, $1); }
+	| DIF { strcpy($$, $1); }
+	| EQEQ { strcpy($$, $1); }
 	;
 
 %%

@@ -59,33 +59,67 @@ void insert_symbol(symbol sym){
     *(scope->symbols + scope->total) = sym;
 }
 
-/*
+/* Funcion que regresa el tipo del identificador pasado como parametro. 
+   Busca en todas las tablas de simbolos. */
 int get_type(char *id){
-    int pos = search(id);
-    if(pos != -1){
-        return (SYM_TABLE.syms+pos)->type;
+    int j = SYM_STACK.total;
+    symbols_table* tabla_actual;
+    while(j >= 0){
+        tabla_actual = SYM_STACK.tables + j;
+        for(int i = 0; i <= tabla_actual->total; i++)
+            if(strcmp(id, (tabla_actual->symbols + i)->id) == 0)
+                return (tabla_actual->symbols + i)->type;
+        j--;
     }
     return -1;
 }
 
-
+/* Funcion que regresa la direccion del identificador pasado como parametro. 
+   Busca en todas las tablas de simbolos. */
 int get_dir(char *id){
-    int pos = search(id);
-    if(pos != -1){
-        return (SYM_TABLE.syms+pos)->dir;
+    int j = SYM_STACK.total;
+    symbols_table* tabla_actual;
+    while(j >= 0){
+        tabla_actual = SYM_STACK.tables + j;
+        for(int i = 0; i <= tabla_actual->total; i++)
+            if(strcmp(id, (tabla_actual->symbols + i)->id) == 0)
+                return (tabla_actual->symbols + i)->dir;
+        j--;
     }
     return -1;
 }
 
-int get_var(char *id){
-    int pos = search(id);
-    if(pos != -1){
-        return (SYM_TABLE.syms+pos)->var;
+/* Funcion que regresa el tipo de identificador pasado como parametro. 
+   Busca en todas las tablas de simbolos. */
+char* get_var(char *id){
+    int j = SYM_STACK.total;
+    symbols_table* tabla_actual;
+    while(j >= 0){
+        tabla_actual = SYM_STACK.tables + j;
+        for(int i = 0; i <= tabla_actual->total; i++)
+            if(strcmp(id, (tabla_actual->symbols + i)->id) == 0)
+                return (tabla_actual->symbols + i)->var;
+        j--;
+    }
+    return "-";
+}
+
+/* Funcion que regresa el numero de argumentos del identificador pasado como parametro. 
+   Busca en todas las tablas de simbolos. */
+int get_num_args(char *id){
+    int j = SYM_STACK.total;
+    symbols_table* tabla_actual;
+    while(j >= 0){
+        tabla_actual = SYM_STACK.tables + j;
+        for(int i = 0; i <= tabla_actual->total; i++)
+            if(strcmp(id, (tabla_actual->symbols + i)->id) == 0)
+                return (tabla_actual->symbols + i)->num_args;
+        j--;
     }
     return -1;
 }
 
-
+/*
 int set_type(char *id, int type){
     int pos = search(id);
     if(pos != -1){

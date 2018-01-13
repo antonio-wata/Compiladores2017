@@ -77,15 +77,15 @@ false			{ yylval.line = yylineno; return FALSE; }
 
 {id}			{ yylval.line = yylineno; strcpy(yylval.sval, yytext); return ID; }
 
-"+"				{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return MAS; }
+"+"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return MAS; }
 
-"-"				{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return MENOS; }
+"-"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return MENOS; }
 
-"*"				{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return PROD; }
+"*"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return PROD; }
 
-"/"				{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return DIV; }
+"/"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return DIV; }
 
-"%"				{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return MOD; }
+"%"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return MOD; }
 
 "(" 			{ yylval.line = yylineno; return PRA; }
 
@@ -113,17 +113,17 @@ false			{ yylval.line = yylineno; return FALSE; }
 
 "&&"			{ yylval.line = yylineno; return AND; }	
 
-"<"				{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return SMT; }
+"<"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return SMT; }
 
-">"				{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return GRT; }
+">"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return GRT; }
 
-">="			{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return GREQ; }
+">="			{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return GREQ; }
 
-"<="			{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return SMEQ; }
+"<="			{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return SMEQ; }
 
-"!="			{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return DIF; }
+"!="			{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return DIF; }
 
-"=="			{ yylval.line = yylineno; strcpy(yylval.ssval, yytext); return EQEQ; }
+"=="			{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return EQEQ; }
 
 [ \n\t\r]		{}
 
