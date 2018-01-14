@@ -25,8 +25,11 @@
 	int max(int, int);
 	void new_Temp(char*);
 	expresion operacion(expresion, expresion, char*);
+	expresion numero_entero(int);
+	expresion numero_flotante(float);
+	expresion numero_doble(double);
+	expresion caracter(char);
 
-	expresion numero(int n);
 	expresion identificador(char *s);
 	condition relacional(expresion e1, expresion e2, char *oprel);
 	condition and(condition c1, condition c2);
@@ -218,9 +221,9 @@ E:	E MAS E { $$ = operacion($1, $3, $2); }
 	| E MOD E { $$ = operacion($1, $3, $2); }
 	| U
 	| CADENA
-	| ENTERO
-	| DOBLE
-	| FLOTANTE
+	| ENTERO { $$ = numero_entero($1); }
+	| DOBLE { $$ = numero_doble($1); }
+	| FLOTANTE { $$ = numero_flotante($1); }
 	| CARACTER
 	| ID PRA H PRC
 	;
@@ -306,6 +309,42 @@ expresion operacion(expresion e1, expresion e2, char* op){
 		else
 			new_exp.first = siginst;
 	}
+	return new_exp;
+}
+
+/* Funcion encargada de tomar un numero entero y guardarlo como expresion. */
+expresion numero_entero(int num){
+	expresion new_exp;
+	sprintf(new_exp.dir, "%d", num);
+	new_exp.type = 1;
+	new_exp.first = -1;
+	return new_exp;
+}
+
+/* Funcion encargada de tomar un numero flotante y guardarlo como expresion. */
+expresion numero_flotante(float num){
+	expresion new_exp;
+	sprintf(new_exp.dir, "%.3f", num);
+	new_exp.type = 2;
+	new_exp.first = -1;
+	return new_exp;
+}
+
+/* Funcion encargada de tomar un numero doble y guardarlo como expresion. */
+expresion numero_doble(double num){
+	expresion new_exp;
+	sprintf(new_exp.dir, "%.3f", num);
+	new_exp.type = 3;
+	new_exp.first = -1;
+	return new_exp;
+}
+
+/* Funcion encargada de tomar un caracter y guardarlo como expresion. */
+expresion caracter(char c){
+	expresion new_exp;
+	sprintf(new_exp.dir, "%c", c);
+	new_exp.type = 4;
+	new_exp.first = -1;
 	return new_exp;
 }
 
