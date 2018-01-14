@@ -21,9 +21,11 @@
 	int global_dim;
 
 	void init();
-	int existe(char *id);
-	int existe_en_alcance(char*id);
-	expresion operacion(expresion e1, expresion e2, char *op);
+	int existe_en_alcance(char*);
+	int max(int, int);
+	void new_Temp(char*);
+	expresion operacion(expresion, expresion, char*);
+
 	expresion numero(int n);
 	expresion identificador(char *s);
 	condition relacional(expresion e1, expresion e2, char *oprel);
@@ -44,6 +46,7 @@
 	char opval[4];
 	type tval;
 	array tarrval;
+	expresion eval;
 }
 
 %start P
@@ -97,6 +100,7 @@
 %type<tval> T
 %type<tarrval> C
 %type<opval> R
+%type<eval> E
 
 %%
 
@@ -207,11 +211,11 @@ M:	ID CTA E CTC
 	;
 
 /* E -> E + E | E - E | E * E | E / E | E % E | cadena | numero | caracter | id ( H ) */
-E:	E MAS E
-	| E MENOS E
-	| E PROD E
-	| E DIV E
-	| E MOD E
+E:	E MAS E { $$ = operacion($1, $3, $2); }
+	| E MENOS E { $$ = operacion($1, $3, $2); }
+	| E PROD E { $$ = operacion($1, $3, $2); }
+	| E DIV E { $$ = operacion($1, $3, $2); }
+	| E MOD E { $$ = operacion($1, $3, $2); }
 	| U
 	| CADENA
 	| ENTERO
@@ -247,21 +251,71 @@ R:	SMT { strcpy($$, $1); }
 
 %%
 
+/* Funcion encargada de iniciar las variables, la tabla de simbolos y 
+   la pila de simbolos. */
 void init(){
 	dir = 0;
 	temporales = 0;
 	init_table();
 }
 
+/* Funcion encarda de decirnos si un identificador ya fue declarado en
+   el mismo alcance. */
 int existe_en_alcance(char* id){
 	return search_scope(id);
 }
 
-void yyerror(char *s){
-	(void) s;
-	fprintf(stderr, "Error Sintactico: %s. En la linea: %d\n", s, yylineno);
+/* Funcion encargada de revisar los tipos, si son correctos toma el de
+   mayor rango, e.o.c manda un mensaje de error. 
+   void = 0, int = 1, float = 2, double = 3, char = 4, struct = 5*/
+int max(int t1, int t2){
+	if(t1 == t2) return t1;
+	else if (t1 == 1 && t2 == 2) return t1;
+	else if (t1 == 2 && t2 == 1) return t2;
+	else if (t1 == 1 && t2 == 3) return t1;
+	else if (t1 == 3 && t2 == 1) return t2;
+	else if (t1 == 1 && t2 == 4) return t1;
+	else if (t1 == 4 && t1 == 1) return t2;
+	else if (t1 == 3 && t1 == 2) return t1;
+	else if (t1 == 2 && t2 == 3) return t2;
+	else{ yyerror("Tipos no compatibles"); return -1; }
 }
 
+/* Funcion encargada de generar una nueva variable temporal. */
+void new_Temp(char* dir){
+	char* temp;
+	char* num;
+	strcpy(temp, "t");
+	sprintf(num, "%d", temporales);
+	temporales++;
+	strcat(temp, num);
+	strcpy(dir, temp);
+}
+
+/* Funcion encargada de generar el codigo para las operaciones de expresiones. */
+expresion operacion(expresion e1, expresion e2, char* op){
+	expresion new_exp;
+	new_exp.type = max(e1.type, e2.type);
+	new_Temp(new_exp.dir);
+	siginst = gen_code(op, e1.dir, e2.dir, new_exp.dir);
+	if(e1.first != -1)
+		new_exp.first = e1.first;
+	else{
+		if(e2.first != -1)
+			new_exp.first = e2.first;
+		else
+			new_exp.first = siginst;
+	}
+	return new_exp;
+}
+
+/* Funcion encargada de manejar los errores. */
+void yyerror(char *s){
+	(void) s;
+	fprintf(stderr, "Error: %s. En la linea: %d\n", s, yylineno);
+}
+
+/* Funcion principal. */
 int main(int argc, char *argv[]){
 	yyin = fopen(argv[1], "r");
 	yyparse();
