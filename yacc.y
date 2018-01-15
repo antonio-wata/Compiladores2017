@@ -5,6 +5,7 @@
 	#include <stdlib.h>
 	#include "attribs.h"
 	#include "symbols.h"
+	#include "types.h"
 	#include "intermediate_code.h"
 
 	extern int yylex();
@@ -142,6 +143,7 @@ L: 	L COMA ID C {
 		if(existe_en_alcance($1) == -1){
 			symbol sym;
 			sym.id = $1;
+			printf("%s\n", $1);
 			sym.dir = dir;
 			sym.type = $2.type;
 			sym.var = "variable";
