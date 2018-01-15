@@ -5,6 +5,7 @@
 	#include <stdlib.h>
 	#include "attribs.h"
 	#include "symbols.h"
+	#include "types.h"
 	#include "intermediate_code.h"
 
 	extern int yylex();
@@ -100,7 +101,7 @@
 %left ELSE
 
 /* Tipos */
-%type<tval> T
+%type<tval> T D
 %type<tarrval> C
 %type<opval> R
 %type<eval> E
@@ -108,13 +109,19 @@
 %%
 
 /* P -> D F */
-P: 	{ init(); } D F { print_table(); print_code();}
+P: 	{ init(); } D F { 
+		print_symbols_table(); 
+		print_types_table(); 
+		print_code(); 
+	}
 	;
 
 
 /* D -> T L ; D | epsilon*/
-D: 	T { global_tipo = $1.type; global_dim = $1.dim; } L PYC D
-	|
+D: 	T { global_tipo = $1.type; 
+		global_dim = $1.dim; 
+	} L PYC D
+	| {}
 	;
 
 /* T -> int | float | double | char | void | struct { D } */
@@ -255,12 +262,13 @@ R:	SMT { strcpy($$, $1); }
 
 %%
 
-/* Funcion encargada de iniciar las variables, la tabla de simbolos y 
-   la pila de simbolos. */
+/* Funcion encargada de iniciar las variables, la tabla de simbolos,  
+   la pila de simbolos y la pila de tipos. */
 void init(){
 	dir = 0;
 	temporales = 0;
-	init_table();
+	init_symbols();
+	init_types();
 }
 
 /* Funcion encarda de decirnos si un identificador ya fue declarado en

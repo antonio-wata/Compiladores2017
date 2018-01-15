@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 /* Inicializa la tabla de simbolos. */
-void init_table(){
+void init_symbols(){
     SYM_TABLE.symbols = malloc(sizeof(symbol) * 1000);
     SYM_TABLE.total = -1;
     SYM_STACK.tables = malloc(sizeof(symbols_table) * 1000);
@@ -148,9 +148,9 @@ int set_var(char *id, int var){
 }
 */
 
-void print_table(){
+void print_symbols_table(){
     symbols_table* top = SYM_STACK.tables + SYM_STACK.total;
-    printf("*** TABLA DE SIMBOLOS ***\n");
+    printf("\n*** TABLA DE SIMBOLOS ***\n");
     printf("pos\tid\ttipo\tdir\tvar\t\t#args\ttipo_args\n");
     for(int i = 0; i < top->total; i++)
         printf("%d\t%s\t%d\t%d\t%s\t%d\t%s\n", i, (top->symbols + i)->id, (top->symbols + i)->type, (top->symbols + i)->dir, (top->symbols + i)->var, (top->symbols + i)->num_args);

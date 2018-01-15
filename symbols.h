@@ -50,7 +50,7 @@ symbols_stack SYM_STACK;
 
 // FUNCIONES:
 
-void init_table();
+void init_symbols();
 
 //char* get_List_Types(list_args* args);
 
@@ -58,7 +58,7 @@ int search_scope(char *id);
 
 int search_global(char *id);
 
-void insert_symbol(symbol sym);
+void insert_symbol(symbol sym); 
 
 int get_type(char *id);
 
@@ -72,6 +72,6 @@ int set_dir(char *id, int dir);
 
 int set_var(char *id, int var);
 
-void print_table();
+void print_symbols_table();
 
 #endif
