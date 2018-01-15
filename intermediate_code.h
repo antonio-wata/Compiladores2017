@@ -5,19 +5,19 @@
 
 
 typedef struct _quad{
-	char op[20];
-	char arg1[50];
-	char arg2[20];
-	char res[20];
+	char* op; //op[20];
+	char* arg1; //arg1[50];
+	char* arg2; //arg2[20];
+	char* res; //res[20];
 } quad;
 
 typedef struct _intermediate_code{
-	quad items[10000];
+	quad* items; //items[10000];
 	int i;
 } intermediate_code;
 
 typedef struct _label{
-	int items[100];
+	int* items; //items[100];
 	int i;
 } label;
 
