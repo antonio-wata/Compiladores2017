@@ -1,6 +1,8 @@
 int x, y;
 float a;
 int x;
+void w;
+int array [2];
 
 func int main(){
 	if(1 == 1){

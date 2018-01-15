@@ -25,7 +25,7 @@ uncomment [/][*]
 
 {comment}		{}
 
-{int}			{ yylval.line = yylineno; yylval.nval = atoi(yytext); return ENTERO; }
+{int}			{ yylval.line = yylineno; yylval.num.ival = atoi(yytext); return ENTERO; }
 
 {double}		{ yylval.line = yylineno; yylval.dval = atof(yytext); return DOBLE; }
 

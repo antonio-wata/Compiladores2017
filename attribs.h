@@ -31,10 +31,4 @@ typedef struct _type{
     int dim;
 } type;
 
-typedef struct array{
-    int type;
-    int base;
-    int dim;
-} array;
-
 #endif

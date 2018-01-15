@@ -43,20 +43,19 @@
 
 %union{
 	int line;
-	int nval;
 	double dval;
 	float fval;
 	char sval[40];
 	char opval[4];
 	type tval;
-	array tarrval;
 	expresion eval;
+	num num;
 }
 
 %start P
 
 %token<sval> ID
-%token<nval> ENTERO
+%token<num> ENTERO
 %token<dval> DOBLE
 %token<fval> FLOTANTE
 %token INT
@@ -101,8 +100,7 @@
 %left ELSE
 
 /* Tipos */
-%type<tval> T D
-%type<tarrval> C
+%type<tval> T D C
 %type<opval> R
 %type<eval> E
 
@@ -118,9 +116,7 @@ P: 	{ init(); } D F {
 
 
 /* D -> T L ; D | epsilon*/
-D: 	T { global_tipo = $1.type; 
-		global_dim = $1.dim; 
-	} L PYC D
+D: 	T { global_tipo = $1.type; global_dim = $1.dim; } L PYC D
 	| {}
 	;
 
@@ -160,8 +156,22 @@ L: 	L COMA ID C {
 	;
 
 /* C -> [numero] C | epsilon */
-C:	CTA ENTERO CTC C 
-	|
+C:	CTA ENTERO CTC C {
+		ttype t;
+		if($2.type == 1){
+			t.type = "array";
+			t.dim = $2.ival;
+			t.base = $4.type;
+			$$.type = insert_type(t);
+			$$.dim = $4.dim * $2.ival;
+		} else yyerror("La dimension del arreglo debe ser entera");
+	}
+	| { 
+		if(global_tipo != 0){
+			$$.type = global_tipo;
+			$$.dim = global_dim;
+		} else yyerror("No se pueden declarar variables de tipo void");
+	}
 	;
 
 /* func T id (A) { D S } F | epsilon */
@@ -229,7 +239,7 @@ E:	E MAS E { $$ = operacion($1, $3, $2); }
 	| E MOD E { $$ = operacion($1, $3, $2); }
 	| U
 	| CADENA
-	| ENTERO { $$ = numero_entero($1); }
+	| ENTERO { $$ = numero_entero($1.ival); }
 	| DOBLE { $$ = numero_doble($1); }
 	| FLOTANTE { $$ = numero_flotante($1); }
 	| CARACTER
