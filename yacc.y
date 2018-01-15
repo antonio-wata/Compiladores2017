@@ -5,7 +5,6 @@
 	#include <stdlib.h>
 	#include "attribs.h"
 	#include "symbols.h"
-	#include "types.h"
 	#include "intermediate_code.h"
 
 	extern int yylex();
