@@ -152,6 +152,6 @@ void print_symbols_table(){
     symbols_table* top = SYM_STACK.tables + SYM_STACK.total;
     printf("\n*** TABLA DE SIMBOLOS ***\n");
     printf("pos\tid\ttipo\tdir\tvar\t\t#args\ttipo_args\n");
-    for(int i = 0; i < top->total; i++)
+    for(int i = 0; i <= top->total; i++)
         printf("%d\t%s\t%d\t%d\t%s\t%d\t%s\n", i, (top->symbols + i)->id, (top->symbols + i)->type, (top->symbols + i)->dir, (top->symbols + i)->var, (top->symbols + i)->num_args);
 }
