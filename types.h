@@ -37,6 +37,7 @@ types_stack TYP_STACK;
 
 void init_types();
 void create_types_table();
+void delete_types_table();
 int insert_type(ttype);
 void print_types_table();
 

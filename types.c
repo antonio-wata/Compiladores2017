@@ -46,6 +46,11 @@ void create_types_table(){
 	*(TYP_STACK.tables + TYP_STACK.total) = new_table;
 }
 
+/* Funcion encargada de eliminar la ultima tabla de tipos de la pila. */
+void delete_types_table(){
+	TYP_STACK.total--;
+}
+
 /* Agrega un tipo a la ultima tabla de la pila. */
 int insert_type(ttype t){
 	types_table* top = TYP_STACK.tables + TYP_STACK.total;

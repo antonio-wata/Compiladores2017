@@ -27,9 +27,9 @@ uncomment [/][*]
 
 {int}			{ yylval.line = yylineno; yylval.num.ival = atoi(yytext); return ENTERO; }
 
-{double}		{ yylval.line = yylineno; yylval.dval = atof(yytext); return DOBLE; }
+{double}		{ yylval.line = yylineno; yylval.num.dval = atof(yytext); return DOBLE; }
 
-{float}			{ yylval.line = yylineno; yylval.fval = atof(yytext); return FLOTANTE; }
+{float}			{ yylval.line = yylineno; yylval.num.fval = atof(yytext); return FLOTANTE; }
 
 {char}			{ yylval.line = yylineno; return CARACTER; }
 

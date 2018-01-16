@@ -43,21 +43,20 @@
 
 %union{
 	int line;
-	double dval;
-	float fval;
 	char sval[40];
 	char opval[4];
 	type tval;
 	expresion eval;
 	num num;
+	args_list args_list;
 }
 
 %start P
 
 %token<sval> ID
 %token<num> ENTERO
-%token<dval> DOBLE
-%token<fval> FLOTANTE
+%token<num> DOBLE
+%token<num> FLOTANTE
 %token INT
 %token FLOAT
 %token DOUBLE
@@ -103,6 +102,7 @@
 %type<tval> T D C
 %type<opval> R
 %type<eval> E
+%type<args_list> A G
 
 %%
 
@@ -180,8 +180,8 @@ F:	FUNCION T ID PRA A PRC LLA D S LLC F
 	;
 
 /* A -> G | epsilon */
-A:	G
-	|
+A:	G { $$ = $1; }
+	| { $$.total = -1; }
 	;
 
 /* G -> G , T id I | T id I */
@@ -240,8 +240,8 @@ E:	E MAS E { $$ = operacion($1, $3, $2); }
 	| U
 	| CADENA
 	| ENTERO { $$ = numero_entero($1.ival); }
-	| DOBLE { $$ = numero_doble($1); }
-	| FLOTANTE { $$ = numero_flotante($1); }
+	| DOBLE { $$ = numero_doble($1.dval); }
+	| FLOTANTE { $$ = numero_flotante($1.fval); }
 	| CARACTER
 	| ID PRA H PRC
 	;

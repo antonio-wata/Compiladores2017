@@ -58,6 +58,10 @@ int search_scope(char *id);
 
 int search_global(char *id);
 
+void create_symbols_table();
+
+void delete_symbols_table();
+
 void insert_symbol(symbol sym); 
 
 int get_type(char *id);

@@ -19,6 +19,7 @@ typedef struct _num{
     int type;
     int ival;
     double dval;
+    float fval;
 } num;
 
 typedef struct _sentence{
@@ -30,5 +31,10 @@ typedef struct _type{
     int type;
     int dim;
 } type;
+
+typedef struct _args_list{
+    int* args;
+    int total;
+} args_list;
 
 #endif

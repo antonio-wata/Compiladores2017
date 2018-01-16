@@ -51,6 +51,21 @@ int search_global(char *id){
     return -1;
 }
 
+/* Funcion encargada de agregar una nueva tabla de simbolos a la pila. */
+void create_symbols_table(){
+    symbols_table new_table;
+    new_table.symbols = malloc(sizeof(symbol) * 1000);
+    new_table.total = -1;
+    SYM_STACK.total++;
+    *(SYM_STACK.tables + SYM_STACK.total) = new_table;
+}
+
+/* Funcion encargada de eliminar la ultima tabla de simbolos de la pila. */
+void delete_symbols_table(){
+    (SYM_STACK.tables + SYM_STACK.total)->total = -1;
+    SYM_STACK.total--;
+}
+
 /* Funcion que agrega un simbolo a la tabla de simbolos actual. */
 void insert_symbol(symbol sym){
     printf("Agregando %s a la tabla...\n", sym.id);
