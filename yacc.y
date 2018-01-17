@@ -31,6 +31,7 @@
 	int* list_args;
 
 	void init();
+	int busca_main();
 	int existe_en_alcance(char*);
 	int existe_globalmnete(char*);
 	int max(int, int);
@@ -121,7 +122,11 @@
 %%
 
 /* P -> D F */
-P: 	{ init(); } D F { 
+P: 	{ init(); } D F {
+		if(busca_main() == -1){
+			yyerror("Falta definir funcion principal.");
+			exit(0);
+		}
 		print_symbols_table(); 
 		print_types_table(); 
 		print_code(); 
@@ -377,6 +382,11 @@ void init(){
 	list_args = malloc(sizeof(int) * 100);
 	init_symbols();
 	init_types();
+}
+
+/* Funcion encargada de buscar que exista la funcion principal. */
+int busca_main(){
+	return search_global("main");
 }
 
 /* Funcion encarda de decirnos si un identificador ya fue declarado en
