@@ -2,19 +2,21 @@ int x, y;
 float a;
 int x;
 void w;
-/*
+
 int array [2];
 
+/*
 func int main(){
 	if(1 == 1){
 		z = '>';
 	}
 	return;
 }
+*/
 
 func double main2(int q, char p){
 	double x;
 	return x;
 }
 
-func int main2(){}*/
+/*func int main2(){}*/

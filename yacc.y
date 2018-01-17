@@ -15,11 +15,20 @@
 	extern FILE *yyout;
 	extern int yylineno;
 
+	// Variable que llevara el manejo de direcciones.
 	int dir;
+	// Variable que llevara la cuenta de variables temporales.
 	int temporales;
+	// Variable que indica la siguiente instruccion.
 	int siginst;
+	// Variable que guarda el tipo heredado.
 	int global_tipo;
+	// Variable que guardara la dimension heredada.
 	int global_dim;
+	// Variable que llevara el numero de parametros que tiene una funcion.
+	int num_args;
+	// Lista que guarda los tipos de los parametros.
+	int* list_args;
 
 	void init();
 	int existe_en_alcance(char*);
@@ -30,11 +39,11 @@
 	expresion numero_flotante(float);
 	expresion numero_doble(double);
 	expresion caracter(char);
+	condition relacional(expresion, expresion, char*);
+	condition and(condition, condition);
+	condition or(condition, condition);
 
 	expresion identificador(char *s);
-	condition relacional(expresion e1, expresion e2, char *oprel);
-	condition and(condition c1, condition c2);
-	condition or(condition c1, condition c2);
 	void newLabel(char *s);
 
 	void yyerror(char*);
@@ -49,6 +58,8 @@
 	expresion eval;
 	num num;
 	args_list args_list;
+	condition cond;
+	sentence sent;
 }
 
 %start P
@@ -99,10 +110,12 @@
 %left ELSE
 
 /* Tipos */
-%type<tval> T D C
+%type<tval> T D C I
 %type<opval> R
 %type<eval> E
 %type<args_list> A G
+%type<cond> B
+%type<sent> S
 
 %%
 
@@ -137,6 +150,8 @@ L: 	L COMA ID C {
 			sym.dir = dir;
 			sym.type = $4.type;
 			sym.var = "variable";
+			sym.num_args = 0;
+			sym.list_types = malloc(sizeof(int) * 100);
 			insert_symbol(sym);
 			dir += $4.dim;
 		} else yyerror("Identificadores duplicados en el mismo alcance");
@@ -145,10 +160,11 @@ L: 	L COMA ID C {
 		if(existe_en_alcance($1) == -1){
 			symbol sym;
 			sym.id = $1;
-			printf("%s\n", $1);
 			sym.dir = dir;
 			sym.type = $2.type;
 			sym.var = "variable";
+			sym.num_args = 0;
+			sym.list_types = malloc(sizeof(int) * 100);
 			insert_symbol(sym);
 			dir += $2.dim;
 		} else yyerror("Identificadores duplicados en el mismo alcance");
@@ -175,23 +191,73 @@ C:	CTA ENTERO CTC C {
 	;
 
 /* func T id (A) { D S } F | epsilon */
+/* Debemos reiniciar el numero de args y la lista en cada funcion. *
+/* Crear una nueva tabla de simbolos y de tipos. */
 F:	FUNCION T ID PRA A PRC LLA D S LLC F
 	|
 	;
 
 /* A -> G | epsilon */
 A:	G { $$ = $1; }
-	| { $$.total = -1; }
+	| { $$.total = 0; }
 	;
 
 /* G -> G , T id I | T id I */
-G:	G COMA T ID I
-	| T ID I
+G:	G COMA T {
+		global_tipo = $3.type;
+		global_dim = $3.dim;
+	}
+	ID I {
+		if(existe_en_alcance($5) == -1){
+			symbol sym;
+			sym.id = $5;
+			sym.dir = dir;
+			sym.type = $6.type;
+			sym.var = "parametro";
+			sym.num_args = 0;
+			insert_symbol(sym);
+			dir += $6.dim;
+			*(list_args + num_args) = $6.type;
+			num_args++;
+		} else yyerror("Parametro duplicado en funcion");
+	}
+	| T {
+		global_tipo = $1.type;
+		global_dim = $1.dim;
+	}
+	ID I {
+		if(existe_en_alcance($3) == -1){
+			symbol sym;
+			sym.id = $3;
+			sym.dir = dir;
+			sym.type = $4.type;
+			sym.var = "parametro";
+			sym.num_args = 0;
+			insert_symbol(sym);
+			dir += $4.dim;
+			*(list_args + num_args) = $4.type;
+			num_args++;
+			$$.total = num_args;
+			$$.args = list_args;
+		} else yyerror("Parametro duplicado en funcion");
+	}
 	;
 
 /* I -> [] I | epsilon */
-I:	CTA CTC I
-	|
+I:	CTA CTC I {
+		ttype t;
+		t.type = "array";
+		t.dim = $3.dim;
+		t.base = $3.type;
+		$$.type = insert_type(t);
+		$$.dim = $3.dim;
+	}
+	| {
+		if(global_tipo != 0){
+			$$.type = global_tipo;
+			$$.dim = global_dim;
+		} else yyerror("No se pueden declarar variables de tipo void");
+	}
 	;
 
 /* S -> S S | if ( B ) S | if ( B ) S else S | while ( B ) S | do S while ( B ) ; | for ( S ; B ; S ) S | U = E ; | return E ; | return ; | { S } | switch ( E ) { J K } | break ; | print E ; */
@@ -252,10 +318,10 @@ H:	H COMA E
 	;
 
 /* B -> B || B | B && B | ! B | ( B ) | E R E | true | false */
-B: 	B OR B
-	| B AND B
+B: 	B OR B { $$ = or($1, $3); }
+	| B AND B { $$ = and($1, $3); }
 	| NOT B
-	| PRA B PRC
+	| PRA B PRC { $$ = $2; }
 	| E R E
 	| TRUE
 	| FALSE
@@ -277,6 +343,8 @@ R:	SMT { strcpy($$, $1); }
 void init(){
 	dir = 0;
 	temporales = 0;
+	num_args = 0;
+	list_args = malloc(sizeof(int) * 100);
 	init_symbols();
 	init_types();
 }
@@ -365,6 +433,42 @@ expresion caracter(char c){
 	new_exp.type = 4;
 	new_exp.first = -1;
 	return new_exp;
+}
+
+/* Funcion encargada de generar el codigo intermedio para una operacion relacional. */
+condition relacional(expresion e1, expresion e2, char* oprel){
+	condition c;
+	char* arg1 = malloc(sizeof(char) * 50);
+	sprintf(arg1, "%s %s %s", e1.dir, oprel, e2.dir);
+	siginst = gen_code("if", arg1, "goto", "");
+	c.ltrue = create_list(siginst);
+	siginst = gen_code("goto", "", "", "");
+	c.lfalse = create_list(siginst);
+	if(e1.first != -1)
+		c.first = e1.first;
+	else if(e2.first != -1)
+		c.first = e2.first;
+	else
+		c.first = siginst - 1;
+	return c;
+}
+
+/* Funcion encargada de tomar un operacion OR y guardarla como condicion. */
+condition or(condition c1, condition c2){
+	condition c;
+	backpatch(c1.lfalse, c2.first);
+	c.ltrue = merge(c1.ltrue, c2.ltrue);
+	c.lfalse = c2.lfalse;
+	return c;
+}
+
+/* Funcion encargada de tomar un operacion AND y guardarla como condicion. */
+condition and(condition c1, condition c2){
+    condition c;
+    backpatch(c1.ltrue, c2.first);
+    c.ltrue= c2.ltrue;
+    c.lfalse = merge(c1.lfalse,c2.lfalse);
+    return c;
 }
 
 /* Funcion encargada de manejar los errores. */

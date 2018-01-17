@@ -1,28 +1,20 @@
 #ifndef SYMBOLS_H
 #define SYMBOLS_H
 
-/* Estructura de una lista de parametros. */
-// type - La cabeza de la lista.
-// next_arg - La cola de la lista.
-//typedef struct _list_args list_args;
-//struct _list_args{
-//	int types[100];
-//};
-
 /* Estructura de un simbolo */
 // id - Identificador
 // var - Clase de simbolo (variable, funcion, paramentro).
 // type - Tipo del simbolo.
 // dir - Direccion donde se encentra.
 // num_args - Numero de parametros, si es que tiene.
+// list_types - Lista con los tipos de parametros.
 typedef struct _symbol{
     char* id;
     char* var;
     int type;
     int dir;
     int num_args;
-    //list_args type_args;
-    int list_types[100];
+    int* list_types;
 } symbol;
 
 /* Estructura de la tabla de simbolos. */
@@ -52,29 +44,29 @@ symbols_stack SYM_STACK;
 
 void init_symbols();
 
-//char* get_List_Types(list_args* args);
+char* get_List_Types(int, int*);
 
-int search_scope(char *id);
+int search_scope(char*);
 
-int search_global(char *id);
+int search_global(char*);
 
 void create_symbols_table();
 
 void delete_symbols_table();
 
-void insert_symbol(symbol sym); 
+void insert_symbol(symbol); 
 
-int get_type(char *id);
+int get_type(char*);
 
-int get_dir(char *id);
+int get_dir(char*);
 
-char* get_var(char *id);
+char* get_var(char*);
 
-int set_type(char *id, int type);
+int set_type(char*, int);
 
-int set_dir(char *id, int dir);
+int set_dir(char*, int);
 
-int set_var(char *id, int var);
+int set_var(char*, int);
 
 void print_symbols_table();
 
