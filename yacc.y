@@ -32,6 +32,7 @@
 
 	void init();
 	int existe_en_alcance(char*);
+	int existe_globalmnete(char*);
 	int max(int, int);
 	void new_Temp(char*);
 	expresion operacion(expresion, expresion, char*);
@@ -193,8 +194,37 @@ C:	CTA ENTERO CTC C {
 /* func T id (A) { D S } F | epsilon */
 /* Debemos reiniciar el numero de args y la lista en cada funcion. *
 /* Crear una nueva tabla de simbolos y de tipos. */
-F:	FUNCION T ID PRA A PRC LLA D S LLC F
-	|
+F:	FUNCION T ID {
+		num_args = 0;
+		list_args = malloc(sizeof(int) * 100);
+		create_symbols_table();
+		create_types_table();
+	}
+	PRA A PRC LLA D S LLC {
+		if(existe_globalmente($3) == -1){
+			//if(strcpm($2.type, $10.return) == 0){
+				ttype t;
+				char* tipo = malloc(sizeof(char) * 10);
+				sprintf(tipo, "%d", $2.type);
+				t.type = tipo;
+				t.base = -1;
+				t.dim = 0;
+
+				symbol sym;
+				sym.id = $3;
+				sym.dir = -1;
+				sym.type = $2.type;
+				sym.var = "funcion";
+				sym.num_args = $6.total;
+				sym.list_types = $6.args;
+				insert_global_symbol(sym);
+			//} else yyerror("El valor de retorno no coincide");
+		} else yyerror("Funcion declarada anteriormente");
+		delete_symbols_table();
+		delete_types_table();
+	}
+	F
+	| {}
 	;
 
 /* A -> G | epsilon */
@@ -353,6 +383,11 @@ void init(){
    el mismo alcance. */
 int existe_en_alcance(char* id){
 	return search_scope(id);
+}
+
+/* Funcion encargada de decirnos si un identificador ya fue declarado globalmente. */
+int existe_globalmente(char* id){
+	return search_global(id);
 }
 
 /* Funcion encargada de revisar los tipos, si son correctos toma el de

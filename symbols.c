@@ -47,6 +47,7 @@ int search_global(char *id){
 
 /* Funcion encargada de agregar una nueva tabla de simbolos a la pila. */
 void create_symbols_table(){
+    printf("Nueva tabla de simbolos creada.\n");
     symbols_table new_table;
     new_table.symbols = malloc(sizeof(symbol) * 1000);
     new_table.total = -1;
@@ -66,6 +67,14 @@ void insert_symbol(symbol sym){
     symbols_table* scope = SYM_STACK.tables + SYM_STACK.total;
     (scope->total)++;
     *(scope->symbols + scope->total) = sym;
+}
+
+/* Funcion que agrega un simbolo a la tabla de simbolos global. */
+void insert_global_symbol(symbol sym){
+    printf("Agregando %s a la tabla de simbolos global...\n", sym.id);
+    symbols_table* global = SYM_STACK.tables + 0;
+    (global->total)++;
+    *(global->symbols + global->total) = sym;
 }
 
 /* Funcion que regresa el tipo del identificador pasado como parametro. 

@@ -12,6 +12,7 @@ void init_types(){
 
 /* Crea una nueva tabla de tipos dentro de la pila de tipos. */
 void create_types_table(){
+	printf("Nueva tabla de tipos creada.\n");
 	types_table new_table;
 	new_table.types = malloc(sizeof(ttype) * 100);
 

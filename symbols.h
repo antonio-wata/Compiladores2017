@@ -56,6 +56,8 @@ void delete_symbols_table();
 
 void insert_symbol(symbol); 
 
+void insert_global_simbol(symbol);
+
 int get_type(char*);
 
 int get_dir(char*);
