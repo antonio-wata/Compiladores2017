@@ -54,8 +54,7 @@
 
 %union{
 	int line;
-	char sval[40];
-	char opval[4];
+	char* sval;
 	type tval;
 	expresion eval;
 	num num;
@@ -102,10 +101,10 @@
 %left ASIG
 %left OR
 %left AND
-%left<opval> EQEQ DIF
-%left<opval> GRT SMT GREQ SMEQ
-%left<opval> MAS MENOS
-%left<opval> PROD DIV MOD
+%left<sval> EQEQ DIF
+%left<sval> GRT SMT GREQ SMEQ
+%left<sval> MAS MENOS
+%left<sval> PROD DIV MOD
 %left NOT
 %nonassoc PRA CTA PRC CTC
 %left IF
@@ -113,7 +112,7 @@
 
 /* Tipos */
 %type<tval> T D C I
-%type<opval> R
+%type<sval> R
 %type<eval> E
 %type<args_list> A G
 %type<cond> B
@@ -218,7 +217,7 @@ F:	FUNCION T ID {
 				symbol sym;
 				sym.id = $3;
 				sym.dir = -1;
-				sym.type = $2.type;
+				sym.type = $2.type; // Falta agregar el tipo t.
 				sym.var = "funcion";
 				sym.num_args = $6.total;
 				sym.list_types = $6.args;

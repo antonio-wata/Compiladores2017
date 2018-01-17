@@ -75,17 +75,17 @@ true 			{ yylval.line = yylineno; return TRUE; }
 
 false			{ yylval.line = yylineno; return FALSE; }
 
-{id}			{ yylval.line = yylineno; strcpy(yylval.sval, yytext); return ID; }
+{id}			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return ID; }
 
-"+"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return MAS; }
+"+"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MAS; }
 
-"-"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return MENOS; }
+"-"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MENOS; }
 
-"*"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return PROD; }
+"*"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return PROD; }
 
-"/"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return DIV; }
+"/"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return DIV; }
 
-"%"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return MOD; }
+"%"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MOD; }
 
 "(" 			{ yylval.line = yylineno; return PRA; }
 
@@ -113,17 +113,17 @@ false			{ yylval.line = yylineno; return FALSE; }
 
 "&&"			{ yylval.line = yylineno; return AND; }	
 
-"<"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return SMT; }
+"<"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return SMT; }
 
-">"				{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return GRT; }
+">"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return GRT; }
 
-">="			{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return GREQ; }
+">="			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return GREQ; }
 
-"<="			{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return SMEQ; }
+"<="			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return SMEQ; }
 
-"!="			{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return DIF; }
+"!="			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return DIF; }
 
-"=="			{ yylval.line = yylineno; strcpy(yylval.opval, yytext); return EQEQ; }
+"=="			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return EQEQ; }
 
 [ \n\t\r]		{}
 
