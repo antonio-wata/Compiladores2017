@@ -1,9 +1,12 @@
 int x, y;
 float a;
-int x;
-void w;
-
+//int x;
+//void w;
+struct{
+	int p;
+} my_struct;
 int array [2];
+
 // comentario prueba
 /*
 func int main(){
@@ -17,6 +20,7 @@ func int main(){
 func double main(int q, char p){	
 	double x;
 	double y;
+	//x = 2 + 2;
 	return x;
 }
 

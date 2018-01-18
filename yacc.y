@@ -144,7 +144,19 @@ T: 	INT { $$.type = 1; $$.dim = 2; }
 	| DOUBLE { $$.type = 3; $$.dim = 8; }
 	| CHAR { $$.type = 4; $$.dim = 1; }
 	| VOID { $$.type = 0; $$.dim = 0; }
-	| STRUCT LLA D LLC { $$.type = 5; $$.dim = -1; }
+	| STRUCT {
+		create_symbols_table();
+		create_types_table();
+	} LLA D LLC { 
+		ttype t;
+		t.type = "struct";
+		t.dim = 0;
+		t.base = -1;
+		$$.type = insert_type(t);
+		$$.dim = dir;
+		delete_symbols_table();
+		delete_types_table();
+	}
 	;
 
 /* L -> L, id C | id C */
@@ -159,7 +171,7 @@ L: 	L COMA ID C {
 			sym.list_types = malloc(sizeof(int) * 100);
 			insert_symbol(sym);
 			dir += $4.dim;
-		} else yyerror("Identificadores duplicados en el mismo alcance");
+		} else{ yyerror("Identificadores duplicados en el mismo alcance"); exit(0); }
 	}
 	| ID C {
 		if(existe_en_alcance($1) == -1){
@@ -172,7 +184,7 @@ L: 	L COMA ID C {
 			sym.list_types = malloc(sizeof(int) * 100);
 			insert_symbol(sym);
 			dir += $2.dim;
-		} else yyerror("Identificadores duplicados en el mismo alcance");
+		} else{ yyerror("Identificadores duplicados en el mismo alcance"); exit(0); }
 	}
 	;
 
@@ -185,13 +197,13 @@ C:	CTA ENTERO CTC C {
 			t.base = $4.type;
 			$$.type = insert_type(t);
 			$$.dim = $4.dim * $2.ival;
-		} else yyerror("La dimension del arreglo debe ser entera");
+		} else { yyerror("La dimension del arreglo debe ser entera"); exit(0); }
 	}
 	| { 
 		if(global_tipo != 0){
 			$$.type = global_tipo;
 			$$.dim = global_dim;
-		} else yyerror("No se pueden declarar variables de tipo void");
+		} else { yyerror("No se pueden declarar variables de tipo void"); exit(0); }
 	}
 	;
 
@@ -222,8 +234,8 @@ F:	FUNCION T ID {
 				sym.num_args = $6.total;
 				sym.list_types = $6.args;
 				insert_global_symbol(sym);
-			//} else yyerror("El valor de retorno no coincide");
-		} else yyerror("Funcion declarada anteriormente");
+			//} else { yyerror("El valor de retorno no coincide"); exit(0); }
+		} else { yyerror("Funcion declarada anteriormente"); exit(0); }
 		delete_symbols_table();
 		delete_types_table();
 	}
@@ -253,7 +265,7 @@ G:	G COMA T {
 			dir += $6.dim;
 			*(list_args + num_args) = $6.type;
 			num_args++;
-		} else yyerror("Parametro duplicado en funcion");
+		} else { yyerror("Parametro duplicado en funcion"); exit(0); }
 	}
 	| T {
 		global_tipo = $1.type;
@@ -273,7 +285,7 @@ G:	G COMA T {
 			num_args++;
 			$$.total = num_args;
 			$$.args = list_args;
-		} else yyerror("Parametro duplicado en funcion");
+		} else { yyerror("Parametro duplicado en funcion"); exit(0); }
 	}
 	;
 
@@ -290,7 +302,7 @@ I:	CTA CTC I {
 		if(global_tipo != 0){
 			$$.type = global_tipo;
 			$$.dim = global_dim;
-		} else yyerror("No se pueden declarar variables de tipo void");
+		} else { yyerror("No se pueden declarar variables de tipo void"); exit(0); }
 	}
 	;
 
@@ -362,12 +374,12 @@ B: 	B OR B { $$ = or($1, $3); }
 	;
 
 /* R -> < | > | >= | <= | != | == */
-R:	SMT { strcpy($$, $1); }
-	| GRT { strcpy($$, $1); }
-	| GREQ { strcpy($$, $1); }
-	| SMEQ { strcpy($$, $1); }
-	| DIF { strcpy($$, $1); }
-	| EQEQ { strcpy($$, $1); }
+R:	SMT { $$ = $1; }
+	| GRT { $$ = $1; }
+	| GREQ { $$ = $1; }
+	| SMEQ { $$ = $1; }
+	| DIF { $$ = $1; }
+	| EQEQ { $$ = $1; }
 	;
 
 %%

@@ -23,11 +23,11 @@ cadena \"[^\"]*\"
 
 %%
 
-{int}				{ yylval.line = yylineno; yylval.num.ival = atoi(yytext); return ENTERO; }
+{int}				{ yylval.line = yylineno; yylval.num.ival = atoi(yytext); yylval.num.type = 1; return ENTERO; }
 
-{double}			{ yylval.line = yylineno; yylval.num.dval = atof(yytext); return DOBLE; }
+{double}			{ yylval.line = yylineno; yylval.num.dval = atof(yytext); yylval.num.type = 3; return DOBLE; }
 
-{float}				{ yylval.line = yylineno; yylval.num.fval = atof(yytext); return FLOTANTE; }
+{float}				{ yylval.line = yylineno; yylval.num.fval = atof(yytext); yylval.num.type = 2; return FLOTANTE; }
 
 {char}				{ yylval.line = yylineno; return CARACTER; }
 
