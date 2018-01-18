@@ -57,6 +57,7 @@ int insert_type(ttype t){
 	types_table* top = TYP_STACK.tables + TYP_STACK.total;
 	(top->total)++;
 	*(top->types + top->total) = t;
+	return top->total;
 }
 
 /* Imprime la tabla de tipos que este en la cima de la pila. */

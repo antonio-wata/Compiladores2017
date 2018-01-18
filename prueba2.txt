@@ -4,7 +4,7 @@ float a;
 //void w;
 struct{
 	int p;
-} my_struct;
+} m;
 int array [2];
 
 // comentario prueba
@@ -22,6 +22,10 @@ func double main(int q, char p){
 	double y;
 	//x = 2 + 2;
 	return x;
+}
+
+func void prueba(){
+	return;
 }
 
 /*func int main2(){}*/

@@ -168,7 +168,7 @@ L: 	L COMA ID C {
 			sym.type = $4.type;
 			sym.var = "variable";
 			sym.num_args = 0;
-			sym.list_types = malloc(sizeof(int) * 100);
+			sym.list_types = malloc(sizeof(int));
 			insert_symbol(sym);
 			dir += $4.dim;
 		} else{ yyerror("Identificadores duplicados en el mismo alcance"); exit(0); }
@@ -181,7 +181,7 @@ L: 	L COMA ID C {
 			sym.type = $2.type;
 			sym.var = "variable";
 			sym.num_args = 0;
-			sym.list_types = malloc(sizeof(int) * 100);
+			sym.list_types = malloc(sizeof(int));
 			insert_symbol(sym);
 			dir += $2.dim;
 		} else{ yyerror("Identificadores duplicados en el mismo alcance"); exit(0); }
@@ -208,8 +208,6 @@ C:	CTA ENTERO CTC C {
 	;
 
 /* func T id (A) { D S } F | epsilon */
-/* Debemos reiniciar el numero de args y la lista en cada funcion. *
-/* Crear una nueva tabla de simbolos y de tipos. */
 F:	FUNCION T ID {
 		num_args = 0;
 		list_args = malloc(sizeof(int) * 100);
@@ -283,7 +281,7 @@ G:	G COMA T {
 			dir += $4.dim;
 			*(list_args + num_args) = $4.type;
 			num_args++;
-			$$.total = num_args;
+			$$.total = num_args + 1;
 			$$.args = list_args;
 		} else { yyerror("Parametro duplicado en funcion"); exit(0); }
 	}
@@ -307,19 +305,19 @@ I:	CTA CTC I {
 	;
 
 /* S -> S S | if ( B ) S | if ( B ) S else S | while ( B ) S | do S while ( B ) ; | for ( S ; B ; S ) S | U = E ; | return E ; | return ; | { S } | switch ( E ) { J K } | break ; | print E ; */
-S: 	S S
-	| IF PRA B PRC S
-	| IF PRA B PRC S ELSE S
-	| WHILE PRA B PRC S
-	| DO S WHILE PRA B PRC PYC
-	| FOR PRA S PYC B PYC S PRC S
-	| U ASIG E PYC
-	| RETURN E PYC
-	| RETURN PYC
-	| LLA S LLC
-	| SWITCH PRA E PRC LLA J K LLC
-	| BREAK PYC
-	| PRINT E PYC
+S: 	S S {}
+	| IF PRA B PRC S {}
+	| IF PRA B PRC S ELSE S {}
+	| WHILE PRA B PRC S {}
+	| DO S WHILE PRA B PRC PYC {}
+	| FOR PRA S PYC B PYC S PRC S {}
+	| U ASIG E PYC {}
+	| RETURN E PYC {}
+	| RETURN PYC {}
+	| LLA S LLC {}
+	| SWITCH PRA E PRC LLA J K LLC {}
+	| BREAK PYC {}
+	| PRINT E PYC {}
 	;
 
 /* J -> case : numero S J | epsilon */
@@ -349,13 +347,13 @@ E:	E MAS E { $$ = operacion($1, $3, $2); }
 	| E PROD E { $$ = operacion($1, $3, $2); }
 	| E DIV E { $$ = operacion($1, $3, $2); }
 	| E MOD E { $$ = operacion($1, $3, $2); }
-	| U
-	| CADENA
+	| U {}
+	| CADENA {}
 	| ENTERO { $$ = numero_entero($1.ival); }
 	| DOBLE { $$ = numero_doble($1.dval); }
 	| FLOTANTE { $$ = numero_flotante($1.fval); }
-	| CARACTER
-	| ID PRA H PRC
+	| CARACTER {}
+	| ID PRA H PRC {}
 	;
 
 /* H -> H , E | E */
@@ -366,11 +364,11 @@ H:	H COMA E
 /* B -> B || B | B && B | ! B | ( B ) | E R E | true | false */
 B: 	B OR B { $$ = or($1, $3); }
 	| B AND B { $$ = and($1, $3); }
-	| NOT B
+	| NOT B {}
 	| PRA B PRC { $$ = $2; }
-	| E R E
-	| TRUE
-	| FALSE
+	| E R E {}
+	| TRUE {}
+	| FALSE {}
 	;
 
 /* R -> < | > | >= | <= | != | == */

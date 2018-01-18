@@ -64,12 +64,6 @@ int get_dir(char*);
 
 char* get_var(char*);
 
-int set_type(char*, int);
-
-int set_dir(char*, int);
-
-int set_var(char*, int);
-
 void print_symbols_table();
 
 #endif

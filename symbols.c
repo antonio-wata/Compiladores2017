@@ -16,8 +16,16 @@ void init_symbols(){
 // Funcion auxiliar de print_table().
 char* get_list_types(int n, int* list){
     char* str_list = malloc(sizeof(char) * 100);
-    for(int i = n; i > 0; i--)
-        sprintf(str_list, "%s ", (list + i));
+    char* type = malloc(sizeof(char) * 3);
+    int j = 0;
+    for(int i = n; i > 0; i--){
+        sprintf(type, "%d", list[i]);
+        strcat(str_list, type);
+        strcat(str_list, ",");
+    }
+    while(str_list[j] != '\0')
+        j++;
+    str_list[j - 1] = '\0';
     return str_list;
 }
 
@@ -136,35 +144,6 @@ int get_num_args(char *id){
     }
     return -1;
 }
-
-/*
-int set_type(char *id, int type){
-    int pos = search(id);
-    if(pos != -1){
-        (SYM_TABLE.syms+pos)->type = type;
-        return pos;
-    }
-    return -1;
-}
-
-int set_dir(char *id, int dir){
-    int pos = search(id);
-    if(pos != -1){
-        (SYM_TABLE.syms+pos)->dir= dir;
-        return pos;
-    }
-    return -1;
-}
-
-int set_var(char *id, int var){
-    int pos = search(id);
-    if(pos != -1){
-        (SYM_TABLE.syms+pos)->var = var;
-        return pos;
-    }
-    return -1;
-}
-*/
 
 void print_symbols_table(){
     symbols_table* top = SYM_STACK.tables + SYM_STACK.total;
