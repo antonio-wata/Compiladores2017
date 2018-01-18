@@ -5,6 +5,11 @@ float a;
 struct{
 	int p;
 } m;
+
+struct{
+	float arr [2][2];
+} n;
+
 int array [2];
 
 // comentario prueba
