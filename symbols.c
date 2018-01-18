@@ -31,7 +31,7 @@ char* get_list_types(int n, int* list){
 
 /* Funcion que busca el identificador en el mismo alcance. */
 int search_scope(char *id){
-    printf("Buscando %s...\n", id);
+    printf("\nBuscando %s en el mismo alcance....", id);
     symbols_table* top = SYM_STACK.tables + SYM_STACK.total;
     for(int i = 0; i <= top->total; i++)
         if(strcmp(id, (top->symbols + i)->id) == 0)
@@ -41,6 +41,7 @@ int search_scope(char *id){
 
 /* Funcion que busca el identificador en todas las tablas. */
 int search_global(char *id){
+    printf("\nBuscando %s en la tabla de simbolos global....\n", id);
     int j = SYM_STACK.total;
     symbols_table* tabla_actual = SYM_STACK.tables + SYM_STACK.total;
     while(j >= 0){
@@ -55,7 +56,7 @@ int search_global(char *id){
 
 /* Funcion encargada de agregar una nueva tabla de simbolos a la pila. */
 void create_symbols_table(){
-    printf("Nueva tabla de simbolos creada.\n");
+    printf("\nEmpieza un nuevo alcance...Nueva tabla de simbolos creada...");
     symbols_table new_table;
     new_table.symbols = malloc(sizeof(symbol) * 1000);
     new_table.total = -1;
@@ -71,7 +72,7 @@ void delete_symbols_table(){
 
 /* Funcion que agrega un simbolo a la tabla de simbolos actual. */
 void insert_symbol(symbol sym){
-    printf("Agregando %s a la tabla...\n", sym.id);
+    printf("Agregando %s a la tabla de simbolos...\n", sym.id);
     symbols_table* scope = SYM_STACK.tables + SYM_STACK.total;
     (scope->total)++;
     *(scope->symbols + scope->total) = sym;
@@ -79,7 +80,7 @@ void insert_symbol(symbol sym){
 
 /* Funcion que agrega un simbolo a la tabla de simbolos global. */
 void insert_global_symbol(symbol sym){
-    printf("Agregando %s a la tabla de simbolos global...\n", sym.id);
+    printf("Agregando %s a la tabla de simbolos global....\n", sym.id);
     symbols_table* global = SYM_STACK.tables + 0;
     (global->total)++;
     *(global->symbols + global->total) = sym;
@@ -145,9 +146,19 @@ int get_num_args(char *id){
     return -1;
 }
 
+/* Funcion encargada de imprimir la tabla de simbolos global. */
 void print_symbols_table(){
-    symbols_table* top = SYM_STACK.tables + SYM_STACK.total;
-    printf("\n*** TABLA DE SIMBOLOS ***\n");
+    symbols_table* top = SYM_STACK.tables;
+    printf("\n*************** TABLA DE SIMBOLOS GLOBAL ***************\n");
+    printf("pos\tid\ttipo\tdir\tvar\t\t#args\ttipo_args\n");
+    for(int i = 0; i <= top->total; i++)
+        printf("%d\t%s\t%d\t%d\t%s\t%d\t%s\n", i, (top->symbols + i)->id, (top->symbols + i)->type, (top->symbols + i)->dir, (top->symbols + i)->var, (top->symbols + i)->num_args, get_list_types((top->symbols + i)->num_args, ((top->symbols + i)->list_types)));
+}
+
+/* Funcion encargada de imprimir la tabla de simbolos de un nuevo alcance. */
+void print_symbols_table_2(int pos, char* name){
+    symbols_table* top = SYM_STACK.tables + pos;
+    printf("\n*************** TABLA DE SIMBOLOS %s ***************\n", name);
     printf("pos\tid\ttipo\tdir\tvar\t\t#args\ttipo_args\n");
     for(int i = 0; i <= top->total; i++)
         printf("%d\t%s\t%d\t%d\t%s\t%d\t%s\n", i, (top->symbols + i)->id, (top->symbols + i)->type, (top->symbols + i)->dir, (top->symbols + i)->var, (top->symbols + i)->num_args, get_list_types((top->symbols + i)->num_args, ((top->symbols + i)->list_types)));

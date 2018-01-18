@@ -66,4 +66,6 @@ char* get_var(char*);
 
 void print_symbols_table();
 
+void print_symbols_table_2(int, char*);
+
 #endif

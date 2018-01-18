@@ -121,7 +121,11 @@
 %%
 
 /* P -> D F */
-P: 	{ init(); } D F {
+P: 	{ 
+		printf("\nInicializando las pilas....\n");
+		printf("Tabla de simbolos global creada...");
+		init(); 
+	} D F {
 		if(busca_main() == -1){
 			yyerror("Falta definir funcion principal.");
 			exit(0);
@@ -234,8 +238,7 @@ F:	FUNCION T ID {
 				insert_global_symbol(sym);
 			//} else { yyerror("El valor de retorno no coincide"); exit(0); }
 		} else { yyerror("Funcion declarada anteriormente"); exit(0); }
-		delete_symbols_table();
-		delete_types_table();
+		print_symbols_table_2(SYM_STACK.total, $3);
 	}
 	F
 	| {}
