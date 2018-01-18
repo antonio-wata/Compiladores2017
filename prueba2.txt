@@ -4,7 +4,7 @@ int x;
 void w;
 
 int array [2];
-
+// comentario prueba
 /*
 func int main(){
 	if(1 == 1){
@@ -14,8 +14,9 @@ func int main(){
 }
 */
 
-func double main2(int q, char p){
+func double main(int q, char p){	
 	double x;
+	double y;
 	return x;
 }
 

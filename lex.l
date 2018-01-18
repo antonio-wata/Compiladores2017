@@ -16,118 +16,132 @@ double [0-9]+("."[0-9]+)?
 float [0-9]+("."[0-9]+)?[fF]
 char '[^\']'
 cadena \"[^\"]*\"
-comment [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
-uncomment [/][*]
+
+%x com1
+%x com2
+
 
 %%
 
-{uncomment}		{ printf("Error comentario mal declarado: %s\n", yytext); }
+{int}				{ yylval.line = yylineno; yylval.num.ival = atoi(yytext); return ENTERO; }
 
-{comment}		{}
+{double}			{ yylval.line = yylineno; yylval.num.dval = atof(yytext); return DOBLE; }
 
-{int}			{ yylval.line = yylineno; yylval.num.ival = atoi(yytext); return ENTERO; }
+{float}				{ yylval.line = yylineno; yylval.num.fval = atof(yytext); return FLOTANTE; }
 
-{double}		{ yylval.line = yylineno; yylval.num.dval = atof(yytext); return DOBLE; }
+{char}				{ yylval.line = yylineno; return CARACTER; }
 
-{float}			{ yylval.line = yylineno; yylval.num.fval = atof(yytext); return FLOTANTE; }
+{cadena}			{ yylval.line = yylineno; return CADENA; }
 
-{char}			{ yylval.line = yylineno; return CARACTER; }
+int					{ yylval.line = yylineno; return INT; }
 
-{cadena}		{ yylval.line = yylineno; return CADENA; }
+double				{ yylval.line = yylineno; return DOUBLE; }
 
-int				{ yylval.line = yylineno; return INT; }
+float				{ yylval.line = yylineno; return FLOAT; }
 
-double			{ yylval.line = yylineno; return DOUBLE; }
+char				{ yylval.line = yylineno; return CHAR; }
 
-float			{ yylval.line = yylineno; return FLOAT; }
+void				{ yylval.line = yylineno; return VOID; }
 
-char			{ yylval.line = yylineno; return CHAR; }
+struct				{ yylval.line = yylineno; return STRUCT; }
 
-void			{ yylval.line = yylineno; return VOID; }
+func				{ yylval.line = yylineno; return FUNCION; }
 
-struct			{ yylval.line = yylineno; return STRUCT; }
+if 					{ yylval.line = yylineno; return IF; }
 
-func			{ yylval.line = yylineno; return FUNCION; }
+else 				{ yylval.line = yylineno; return ELSE; }
 
-if 				{ yylval.line = yylineno; return IF; }
+while				{ yylval.line = yylineno; return WHILE; }
 
-else 			{ yylval.line = yylineno; return ELSE; }
+do 					{ yylval.line = yylineno; return DO; }
 
-while			{ yylval.line = yylineno; return WHILE; }
+for					{ yylval.line = yylineno; return FOR; }
 
-do 				{ yylval.line = yylineno; return DO; }
+return				{ yylval.line = yylineno; return RETURN; }
 
-for				{ yylval.line = yylineno; return FOR; }
+switch				{ yylval.line = yylineno; return SWITCH; }
 
-return			{ yylval.line = yylineno; return RETURN; }
+case				{ yylval.line = yylineno; return CASE; }
 
-switch			{ yylval.line = yylineno; return SWITCH; }
+default				{ yylval.line = yylineno; return DEFAULT; }
 
-case			{ yylval.line = yylineno; return CASE; }
+break				{ yylval.line = yylineno; return BREAK; }
 
-default			{ yylval.line = yylineno; return DEFAULT; }
+print 				{ yylval.line = yylineno; return PRINT; }
 
-break			{ yylval.line = yylineno; return BREAK; }
+true 				{ yylval.line = yylineno; return TRUE; }
 
-print 			{ yylval.line = yylineno; return PRINT; }
+false				{ yylval.line = yylineno; return FALSE; }
 
-true 			{ yylval.line = yylineno; return TRUE; }
+{id}				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return ID; }
 
-false			{ yylval.line = yylineno; return FALSE; }
+"+"					{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MAS; }
 
-{id}			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return ID; }
+"-"					{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MENOS; }
 
-"+"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MAS; }
+"*"					{ yylval.line = yylineno; yylval.sval = strdup(yytext); return PROD; }
 
-"-"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MENOS; }
+"/"					{ yylval.line = yylineno; yylval.sval = strdup(yytext); return DIV; }
 
-"*"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return PROD; }
+"%"					{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MOD; }
 
-"/"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return DIV; }
+"(" 				{ yylval.line = yylineno; return PRA; }
 
-"%"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return MOD; }
+")" 				{ yylval.line = yylineno; return PRC; }
 
-"(" 			{ yylval.line = yylineno; return PRA; }
+"["					{ yylval.line = yylineno; return CTA; }
 
-")" 			{ yylval.line = yylineno; return PRC; }
+"]"					{ yylval.line = yylineno; return CTC; }
 
-"["				{ yylval.line = yylineno; return CTA; }
+"{"					{ yylval.line = yylineno; return LLA; }	
 
-"]"				{ yylval.line = yylineno; return CTC; }
+"}"					{ yylval.line = yylineno; return LLC; }	
 
-"{"				{ yylval.line = yylineno; return LLA; }	
+"="					{ yylval.line = yylineno; return ASIG; }	
 
-"}"				{ yylval.line = yylineno; return LLC; }	
+":"					{ yylval.line = yylineno; return DPTS; }	
 
-"="				{ yylval.line = yylineno; return ASIG; }	
+";"					{ yylval.line = yylineno; return PYC; }	
 
-":"				{ yylval.line = yylineno; return DPTS; }	
+","					{ yylval.line = yylineno; return COMA; }
 
-";"				{ yylval.line = yylineno; return PYC; }	
+"!"					{ yylval.line = yylineno; return NOT; }	
 
-","				{ yylval.line = yylineno; return COMA; }
+"||"				{ yylval.line = yylineno; return OR; }	
 
-"!"				{ yylval.line = yylineno; return NOT; }	
+"&&"				{ yylval.line = yylineno; return AND; }	
 
-"||"			{ yylval.line = yylineno; return OR; }	
+"<"					{ yylval.line = yylineno; yylval.sval = strdup(yytext); return SMT; }
 
-"&&"			{ yylval.line = yylineno; return AND; }	
+">"					{ yylval.line = yylineno; yylval.sval = strdup(yytext); return GRT; }
 
-"<"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return SMT; }
+">="				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return GREQ; }
 
-">"				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return GRT; }
+"<="				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return SMEQ; }
 
-">="			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return GREQ; }
+"!="				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return DIF; }
 
-"<="			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return SMEQ; }
+"=="				{ yylval.line = yylineno; yylval.sval = strdup(yytext); return EQEQ; }
 
-"!="			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return DIF; }
+[ \n\t\r]			{}
 
-"=="			{ yylval.line = yylineno; yylval.sval = strdup(yytext); return EQEQ; }
+"/*"				{ BEGIN(com1); }
 
-[ \n\t\r]		{}
+<com1>\n    		{ yylval.line = yylineno; }
 
-.				{ printf("Error lexico en la linea: %d\n", yylineno);}
+<com1>[^*\n]*		{}
+
+<com1>"*"+[^*/\n]*	{}
+
+<com1>"*"+"/"		{ BEGIN(INITIAL); }
+
+"//"				{ BEGIN(com2); }
+
+<com2>[^*\n]*		{}
+
+<com2>\n  			{ BEGIN(INITIAL); }
+
+.					{ printf("Error lexico en la linea: %d\n", yylineno);}
 
 %%
 
