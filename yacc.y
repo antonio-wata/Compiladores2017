@@ -239,6 +239,7 @@ F:	FUNCION T ID {
 			//} else { yyerror("El valor de retorno no coincide"); exit(0); }
 		} else { yyerror("Funcion declarada anteriormente"); exit(0); }
 		print_symbols_table_2(SYM_STACK.total, $3);
+		delete_types_table();
 	}
 	F
 	| {}
