@@ -62,9 +62,9 @@ int insert_type(ttype t){
 
 /* Imprime la tabla de tipos global. */
 void print_types_table(){
-	types_table* top = TYP_STACK.tables;
+	types_table* global = TYP_STACK.tables;
 	printf("\n*************** TABLA DE TIPOS GLOBAL ***************\n");
 	printf("pos\ttipo\tdim\tbase\n");
-	for(int i = 0; i <= top->total; i++)
-		printf("%d\t%s\t%d\t%d\n", i, (top->types + i)->type, (top->types + i)->dim, (top->types + i)->base);
+	for(int i = 0; i <= global->total; i++)
+		printf("%d\t%s\t%d\t%d\n", i, (global->types + i)->type, (global->types + i)->dim, (global->types + i)->base);
 }
