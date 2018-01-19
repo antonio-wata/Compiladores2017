@@ -36,11 +36,7 @@ void create_types_table(){
 	(new_table.types + 4)->dim = 1;
 	(new_table.types + 4)->base = -1;
 
-	(new_table.types + 5)->type = "struct";
-	(new_table.types + 5)->dim = 0;
-	(new_table.types + 5)->base = -1;
-
-	new_table.total = 5;
+	new_table.total = 4;
 
 	TYP_STACK.total++;
 
@@ -55,6 +51,14 @@ void delete_types_table(){
 /* Agrega un tipo a la ultima tabla de la pila. */
 int insert_type(ttype t){
 	types_table* top = TYP_STACK.tables + TYP_STACK.total;
+	(top->total)++;
+	*(top->types + top->total) = t;
+	return top->total;
+}
+
+/* Agrega un tipo a la tabla de tipos global. */
+int insert_type_global(ttype t){
+	types_table* top = TYP_STACK.tables;
 	(top->total)++;
 	*(top->types + top->total) = t;
 	return top->total;

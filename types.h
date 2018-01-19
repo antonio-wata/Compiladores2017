@@ -39,6 +39,7 @@ void init_types();
 void create_types_table();
 void delete_types_table();
 int insert_type(ttype);
+int insert_type_global(ttype);
 void print_types_table();
 
 #endif

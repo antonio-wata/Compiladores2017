@@ -156,7 +156,7 @@ T: 	INT { $$.type = 1; $$.dim = 2; }
 		t.type = "struct";
 		t.dim = 0;
 		t.base = -1;
-		$$.type = insert_type(t);
+		$$.type = insert_type_global(t);
 		$$.dim = dir;
 		print_symbols_table_2(SYM_STACK.total, "struct");
 		delete_symbols_table();
