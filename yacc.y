@@ -17,6 +17,8 @@
 
 	// Variable que llevara el manejo de direcciones.
 	int dir;
+	// Variable que guardara la direccion cuando se haga un cambio de alcance.
+	int dir_aux;
 	// Variable que llevara la cuenta de variables temporales.
 	int temporales;
 	// Variable que indica la siguiente instruccion.
@@ -29,6 +31,8 @@
 	int num_args;
 	// Lista que guarda los tipos de los parametros.
 	int* list_args;
+	// Variable que nos ayuda a saber en que alcance estamos.
+	int scope;
 
 	void init();
 	int busca_main();
@@ -149,6 +153,9 @@ T: 	INT { $$.type = 1; $$.dim = 2; }
 	| STRUCT {
 		create_symbols_table();
 		create_types_table();
+		dir_aux = dir;
+		dir = 0;
+		scope++;
 	} LLA D LLC { 
 		ttype t;
 		t.type = "struct";
@@ -157,7 +164,8 @@ T: 	INT { $$.type = 1; $$.dim = 2; }
 		$$.type = insert_type_global(t);
 		$$.dim = dir;
 		print_symbols_table_2(SYM_STACK.total, "struct");
-		delete_symbols_table();
+		scope--;
+		dir = dir_aux;
 		delete_types_table();
 	}
 	;
@@ -172,7 +180,10 @@ L: 	L COMA ID C {
 			sym.var = "variable";
 			sym.num_args = 0;
 			sym.list_types = malloc(sizeof(int));
-			insert_symbol(sym);
+			if(scope > 0)
+				insert_symbol(sym);
+			else 
+				insert_global_symbol(sym);
 			dir += $4.dim;
 		} else{ yyerror("Identificadores duplicados en el mismo alcance"); exit(0); }
 	}
@@ -185,7 +196,10 @@ L: 	L COMA ID C {
 			sym.var = "variable";
 			sym.num_args = 0;
 			sym.list_types = malloc(sizeof(int));
-			insert_symbol(sym);
+			if(scope > 0)
+				insert_symbol(sym);
+			else
+				insert_global_symbol(sym);
 			dir += $2.dim;
 		} else{ yyerror("Identificadores duplicados en el mismo alcance"); exit(0); }
 	}
@@ -216,6 +230,9 @@ F:	FUNCION T ID {
 		list_args = malloc(sizeof(int) * 100);
 		create_symbols_table();
 		create_types_table();
+		scope++;
+		dir_aux = dir;
+		dir = 0;
 	}
 	PRA A PRC LLA D S LLC {
 		if(existe_globalmente($3) == -1){
@@ -238,6 +255,8 @@ F:	FUNCION T ID {
 			//} else { yyerror("El valor de retorno no coincide"); exit(0); }
 		} else { yyerror("Funcion declarada anteriormente"); exit(0); }
 		print_symbols_table_2(SYM_STACK.total, $3);
+		scope--;
+		dir = dir_aux;
 		delete_types_table();
 	}
 	F
@@ -418,6 +437,7 @@ void init(){
 	dir = 0;
 	temporales = 0;
 	num_args = 0;
+	scope = 0;
 	list_args = malloc(sizeof(int) * 100);
 	init_symbols();
 	init_types();
