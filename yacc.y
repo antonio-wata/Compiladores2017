@@ -113,10 +113,8 @@
 /* Tipos */
 %type<tval> T D C I
 %type<sval> R
-%type<eval> E
 %type<args_list> A G
 %type<cond> B
-%type<sent> S
 
 %%
 
@@ -127,7 +125,7 @@ P: 	{
 		init(); 
 	} D F {
 		if(busca_main() == -1){
-			yyerror("Falta definir funcion principal.");
+			yyerror("Falta definir funcion principal");
 			exit(0);
 		}
 		print_symbols_table(); 
@@ -310,19 +308,19 @@ I:	CTA CTC I {
 	;
 
 /* S -> S S | if ( B ) S | if ( B ) S else S | while ( B ) S | do S while ( B ) ; | for ( S ; B ; S ) S | U = E ; | return E ; | return ; | { S } | switch ( E ) { J K } | break ; | print E ; */
-S: 	S S {}
-	| IF PRA B PRC S {}
-	| IF PRA B PRC S ELSE S {}
-	| WHILE PRA B PRC S {}
-	| DO S WHILE PRA B PRC PYC {}
-	| FOR PRA S PYC B PYC S PRC S {}
-	| U ASIG E PYC {}
-	| RETURN E PYC {}
-	| RETURN PYC {}
-	| LLA S LLC {}
-	| SWITCH PRA E PRC LLA J K LLC {}
-	| BREAK PYC {}
-	| PRINT E PYC {}
+S: 	S S 
+	| IF PRA B PRC S 
+	| IF PRA B PRC S ELSE S 
+	| WHILE PRA B PRC S 
+	| DO S WHILE PRA B PRC PYC 
+	| FOR PRA S PYC B PYC S PRC S 
+	| U ASIG E PYC 
+	| RETURN E PYC 
+	| RETURN PYC 
+	| LLA S LLC 
+	| SWITCH PRA E PRC LLA J K LLC 
+	| BREAK PYC 
+	| PRINT E PYC 
 	;
 
 /* J -> case : numero S J | epsilon */
@@ -336,29 +334,56 @@ K:	DEFAULT DPTS S
 	;
 
 /* U -> id | M | id . id */
-U:	ID
+U:	ID {
+		if(existe_globalmente($1) == -1){
+			yyerror("Variable no declarada");
+			exit(0);
+		}	
+	}
 	| M
-	| ID PT ID
+	| ID PT ID {
+		if(existe_globalmente($1) != -1){
+			int t = get_type($1);
+			if(t == 1 || t == 2 || t == 3 || t ==4){
+				yyerror("La variable no es una estructura");
+				exit(0);
+			}
+		} else {
+			yyerror("Variable no declarada");
+			exit(0);
+		}
+	}
 	;
 
 /* M -> id [ E ] | M [ E ] */
-M:	ID CTA E CTC
+M:	ID CTA E CTC {
+		if(existe_globalmente($1) != -1){
+			int t = get_type($1);
+			if(t == 1 || t == 2 || t == 3 || t ==4){
+				yyerror("La variable no es un arreglo");
+				exit(0);
+			}
+		} else {
+			yyerror("Variable no declarada");
+			exit(0);
+		}
+	}
 	| M CTA E CTC
 	;
 
-/* E -> E + E | E - E | E * E | E / E | E % E | cadena | numero | caracter | id ( H ) */
-E:	E MAS E { $$ = operacion($1, $3, $2); }
-	| E MENOS E { $$ = operacion($1, $3, $2); }
-	| E PROD E { $$ = operacion($1, $3, $2); }
-	| E DIV E { $$ = operacion($1, $3, $2); }
-	| E MOD E { $$ = operacion($1, $3, $2); }
-	| U {}
-	| CADENA {}
-	| ENTERO { $$ = numero_entero($1.ival); }
-	| DOBLE { $$ = numero_doble($1.dval); }
-	| FLOTANTE { $$ = numero_flotante($1.fval); }
-	| CARACTER {}
-	| ID PRA H PRC {}
+/* E -> E + E | E - E | E * E | E / E | E % E | U | cadena | numero | caracter | id ( H ) */
+E:	E MAS E
+	| E MENOS E 
+	| E PROD E 
+	| E DIV E 
+	| E MOD E 
+	| U 
+	| CADENA 
+	| ENTERO 
+	| DOBLE 
+	| FLOTANTE 
+	| CARACTER 
+	| ID PRA H PRC 
 	;
 
 /* H -> H , E | E */
@@ -533,7 +558,7 @@ condition and(condition c1, condition c2){
 /* Funcion encargada de manejar los errores. */
 void yyerror(char *s){
 	(void) s;
-	fprintf(stderr, "Error: %s. En la linea: %d\n", s, yylineno);
+	fprintf(stderr, "\n****Error: %s. En la linea: %d\n", s, yylineno);
 }
 
 /* Funcion principal. */

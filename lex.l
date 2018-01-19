@@ -43,7 +43,7 @@ char				{ yylval.line = yylineno; return CHAR; }
 
 void				{ yylval.line = yylineno; return VOID; }
 
-struct				{ yylval.line = yylineno; return STRUCT; }
+"struct"				{ yylval.line = yylineno; return STRUCT; }
 
 func				{ yylval.line = yylineno; return FUNCION; }
 
@@ -105,6 +105,8 @@ false				{ yylval.line = yylineno; return FALSE; }
 
 ","					{ yylval.line = yylineno; return COMA; }
 
+\.					{ yylval.line = yylineno; return PT; }
+
 "!"					{ yylval.line = yylineno; return NOT; }	
 
 "||"				{ yylval.line = yylineno; return OR; }	
@@ -141,7 +143,7 @@ false				{ yylval.line = yylineno; return FALSE; }
 
 <com2>\n  			{ BEGIN(INITIAL); }
 
-.					{ printf("Error lexico en la linea: %d\n", yylineno);}
+.					{ printf("\n****Error lexico en la linea: %d\n", yylineno);}
 
 %%
 

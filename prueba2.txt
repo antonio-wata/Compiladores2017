@@ -1,3 +1,4 @@
+double arr [2][3];
 int x, y;
 float a;
 //int x;
@@ -15,7 +16,7 @@ int array [2];
 // comentario prueba
 /*
 func int main(){
-	if(1 == 1){
+	if(true && true){
 		z = '>';
 	}
 	return;
@@ -25,7 +26,12 @@ func int main(){
 func double main(int q, char p){	
 	double x;
 	double y;
-	//x = 2 + 2;
+	//j = 2 + 2;
+	//a[2] = 2;
+	//j.d = 3;
+	if(!((true && false) || (true || false))){
+		return;
+	}
 	return x;
 }
 

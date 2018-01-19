@@ -43,29 +43,17 @@ symbols_stack SYM_STACK;
 // FUNCIONES:
 
 void init_symbols();
-
 char* get_List_Types(int, int*);
-
 int search_scope(char*);
-
 int search_global(char*);
-
 void create_symbols_table();
-
 void delete_symbols_table();
-
 void insert_symbol(symbol); 
-
 void insert_global_simbol(symbol);
-
 int get_type(char*);
-
 int get_dir(char*);
-
 char* get_var(char*);
-
 void print_symbols_table();
-
 void print_symbols_table_2(int, char*);
 
 #endif
