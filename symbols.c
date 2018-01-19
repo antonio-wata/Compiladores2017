@@ -150,7 +150,7 @@ int get_num_args(char *id){
 void print_symbols_table(){
     symbols_table* global = SYM_STACK.tables;
     printf("\n*************** TABLA DE SIMBOLOS GLOBAL ***************\n");
-    printf("pos\tid\ttipo\tdir\tvar\t\t#args\ttipo_args\n");
+    printf("pos\tid\ttipo\tdir\tclase\t#args\ttipo_args\n");
     for(int i = 0; i <= global->total; i++)
         printf("%d\t%s\t%d\t%d\t%s\t%d\t%s\n", i, (global->symbols + i)->id, (global->symbols + i)->type, (global->symbols + i)->dir, (global->symbols + i)->var, (global->symbols + i)->num_args, get_list_types((global->symbols + i)->num_args, ((global->symbols + i)->list_types)));
 }
@@ -159,7 +159,7 @@ void print_symbols_table(){
 void print_symbols_table_2(int pos, char* name){
     symbols_table* top = SYM_STACK.tables + pos;
     printf("\n*************** TABLA DE SIMBOLOS %s ***************\n", name);
-    printf("pos\tid\ttipo\tdir\tvar\t\t#args\ttipo_args\n");
+    printf("pos\tid\ttipo\tdir\tclase\t#args\ttipo_args\n");
     for(int i = 0; i <= top->total; i++)
         printf("%d\t%s\t%d\t%d\t%s\t%d\t%s\n", i, (top->symbols + i)->id, (top->symbols + i)->type, (top->symbols + i)->dir, (top->symbols + i)->var, (top->symbols + i)->num_args, get_list_types((top->symbols + i)->num_args, ((top->symbols + i)->list_types)));
 }

@@ -177,7 +177,7 @@ L: 	L COMA ID C {
 			sym.id = $3;
 			sym.dir = dir;
 			sym.type = $4.type;
-			sym.var = "variable";
+			sym.var = "var";
 			sym.num_args = 0;
 			sym.list_types = malloc(sizeof(int));
 			if(scope > 0)
@@ -193,7 +193,7 @@ L: 	L COMA ID C {
 			sym.id = $1;
 			sym.dir = dir;
 			sym.type = $2.type;
-			sym.var = "variable";
+			sym.var = "var";
 			sym.num_args = 0;
 			sym.list_types = malloc(sizeof(int));
 			if(scope > 0)
@@ -248,7 +248,7 @@ F:	FUNCION T ID {
 				sym.id = $3;
 				sym.dir = -1;
 				sym.type = $2.type; // Falta agregar el tipo t.
-				sym.var = "funcion";
+				sym.var = "fun";
 				sym.num_args = $6.total;
 				sym.list_types = $6.args;
 				insert_global_symbol(sym);
@@ -279,7 +279,7 @@ G:	G COMA T {
 			sym.id = $5;
 			sym.dir = dir;
 			sym.type = $6.type;
-			sym.var = "parametro";
+			sym.var = "par";
 			sym.num_args = 0;
 			insert_symbol(sym);
 			dir += $6.dim;
@@ -297,7 +297,7 @@ G:	G COMA T {
 			sym.id = $3;
 			sym.dir = dir;
 			sym.type = $4.type;
-			sym.var = "parametro";
+			sym.var = "par";
 			sym.num_args = 0;
 			insert_symbol(sym);
 			dir += $4.dim;
